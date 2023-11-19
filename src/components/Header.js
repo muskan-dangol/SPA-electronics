@@ -13,7 +13,6 @@ const Container = styled.div`
   height: 4vh;
   background-color: LightGray;
   display: flex;
-  margin: 2px;
 `;
 const Button = styled.button`
   padding: 3px;
