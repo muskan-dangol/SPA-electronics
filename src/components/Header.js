@@ -10,8 +10,8 @@ function Header() {
 export default Header;
 
 const Container = styled.div`
-  height: 4vh;
-  background-color: LightGray;
+  height: 10%;
+  background-color: #e2effe;
   display: flex;
 `;
 const Button = styled.button`
@@ -21,7 +21,6 @@ const Button = styled.button`
   margin: 5px;
   border-color: lightblue;
   cursor: pointer;
-  color: white;
   font-size: 20px;
   text-align: center;
   font-weight: bold;

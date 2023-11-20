@@ -31,10 +31,20 @@ const InnerContainer = styled.div.attrs((props) => ({
   height: 100%;
   ${(props) => props.innerClassName};
   animation: ${({ $animation }) =>
-    $animation && css`${shimmerAnimation} ${$animation}`};
+    $animation &&
+    css`
+      ${shimmerAnimation} ${$animation}
+    `};
 `;
 
-function Skeleton({ times, outerClassName, innerClassName, width, height, animation }) {
+function Skeleton({
+  times,
+  outerClassName,
+  innerClassName,
+  width,
+  height,
+  animation,
+}) {
   const boxes = Array(times)
     .fill(0)
     .map((_, i) => {
@@ -43,9 +53,12 @@ function Skeleton({ times, outerClassName, innerClassName, width, height, animat
           outerClassName={outerClassName}
           width={width}
           height={height}
-          key={i} // Add a unique key for each box
+          key={i}
         >
-          <InnerContainer innerClassName={innerClassName} $animation={animation} />
+          <InnerContainer
+            innerClassName={innerClassName}
+            $animation={animation}
+          />
         </OuterContainer>
       );
     });

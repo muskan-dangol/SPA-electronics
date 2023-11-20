@@ -6,7 +6,7 @@ const fetchProducts = createAsyncThunk("products/fetch", async () => {
   // await pause(1000); //DEV ONLY
   return response.data.products; 
   // data is automatically assigned to the payload property of the fulfilled action type
-  
+
 });
 
 //DEV ONLY
@@ -20,7 +20,4 @@ const fetchProducts = createAsyncThunk("products/fetch", async () => {
 export {fetchProducts};
 
 
-//three properties are automatically added to the fetchProducts variable
-//fetchProducts.pending === products/fetch/pending
-// fetchProducts.fulfilled === products/fetch/fulfilled 
-// fetchProducts.rejected === products/fetch/rejected
+
