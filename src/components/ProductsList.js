@@ -19,8 +19,9 @@ function ProductsList() {
   if (isLoading) {
     return (
       <Skeleton
+        // style={{ display: 'flex', flexDirection: 'column' }}
         times={7}
-        width="100%"
+        width="70%"
         height="4vh"
         animation="1.5s ease infinite"
       />
@@ -47,6 +48,16 @@ function ProductsList() {
 
 export default ProductsList;
 
+const ContentContainer = styled.div`
+  float: left;
+  width: 70%;
+  padding: 1%;
+  @media (max-width: 600px) {
+    width: 100%;
+    padding: 2%;
+  }
+`;
+
 const ContentBox = styled.div`
   float: left;
   width: 100%;
@@ -57,6 +68,7 @@ const ContentBox = styled.div`
   flex-direction: column;
   align-items: center;
   margin: 2px;
+  
   &:hover{
     box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
   }
@@ -65,19 +77,19 @@ const ContentBox = styled.div`
     width: 48%;
     margin: 1%;
   }
-
-  @media (min-width: 900px) {
-    width: 31.33%;
+@media (min-width: 1000px) {
+    width: 30%;
   }
-  @media (min-width: 1350px) {
-    width: 23%;
+  @media (max-width: 600px) {
+    width: 95%;
   }
+ 
 `;
 
 const ProductTitle = styled.p`
   margin: 5px 0px;
-  font-size: 1.1rem;
-  over-flow: hidden;
+  font-size: 1.2rem;
+  height: 4vh;
 `;
 
 const ProductPrice = styled.p`
@@ -88,7 +100,6 @@ const ProductPrice = styled.p`
 
 const ProductImage = styled.img`
   object-fit: cover;
-  over-flow: hidden;
   width: 100%;
   height: 300px;
 `;
@@ -100,8 +111,4 @@ const ProductDetails = styled.div`
   height: 10%;
   padding-top: 0.5rem;
   padding-bottom: 0.5rem;
-`;
-
-const ContentContainer = styled.div`
-  padding: 1%;
 `;

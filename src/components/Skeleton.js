@@ -12,6 +12,7 @@ const shimmerAnimation = keyframes`
 const OuterContainer = styled.div`
   position: relative;
   overflow: hidden;
+  float:right;
   background-color: #e5e5e5;
   border-radius: 2px;
   margin: 5px 0px;
@@ -27,7 +28,6 @@ const InnerContainer = styled.div.attrs((props) => ({
   inset: 0;
   transform: translateX(-100%);
   background: linear-gradient(to right, #e5e5e5, #ffffff, #e5e5e5);
-  width: 100%;
   height: 100%;
   ${(props) => props.innerClassName};
   animation: ${({ $animation }) =>

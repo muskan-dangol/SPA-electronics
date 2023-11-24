@@ -10,9 +10,12 @@ function Header() {
 export default Header;
 
 const Container = styled.div`
-  height: 10%;
+  width: 100%;
+  padding: 5px;
   background-color: #e2effe;
   display: flex;
+  position: fixed;
+  height: 50px;
 `;
 const Button = styled.button`
   padding: 3px;
