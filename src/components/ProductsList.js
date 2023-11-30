@@ -1,25 +1,46 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchProducts } from "../store";
 import styled from "styled-components";
 import RatingStar from "./StarRating";
 import Skeleton from "./Skeleton";
+import SortBar from "./SortBar";
 
-function ProductsList() {
+const ProductsList = () => {
   const dispatch = useDispatch();
+  const [sortOrder, setSortOrder] = useState("asc");
+  const [sortBy, setSortBy] = useState("");
 
   const { isLoading, data, error } = useSelector((state) => {
     return state.products; //{data:[], isLoading:false, error:null}
   });
 
   useEffect(() => {
-    dispatch(fetchProducts());
-  }, [dispatch]);
+    dispatch(fetchProducts(sortOrder, sortBy));
+  }, [dispatch, sortOrder, sortBy]);
+
+  const handleSortChange = (newSortOrder, newSortBy) => {
+    setSortBy(newSortBy);
+    setSortOrder(newSortOrder);
+  };
+
+  const sortedData = [...data].sort((a, b) => {
+    const order = sortOrder === "asc" ? 1 : -1;
+    if (sortBy === "title") {
+      return a.title.localeCompare(b.title) * order;
+    } else if (sortBy === "title_Z-A") {
+      return b.title.localeCompare(a.title) * order;
+    } else if (sortBy === "lowtohigh") {
+      return (a.price - b.price) * order;
+    } else if (sortBy === "hightolow") {
+      return (b.price - a.price) * order;
+    }
+    return 0;
+  });
 
   if (isLoading) {
     return (
       <Skeleton
-        // style={{ display: 'flex', flexDirection: 'column' }}
         times={7}
         width="70%"
         height="4vh"
@@ -31,27 +52,35 @@ function ProductsList() {
     return <div>Error fetching data...</div>;
   }
 
-  const renderedProducts = data.map((product) => {
-    return (
-      <ContentBox key={product.id}>
-        <ProductImage src={product.images[0]} alt="pda logo" />
-        <ProductDetails>
-          <ProductTitle>{product.title}</ProductTitle>
-          <ProductPrice>${product.price}</ProductPrice>
-          <RatingStar value={product.rating} />
-        </ProductDetails>
-      </ContentBox>
-    );
-  });
-  return <ContentContainer>{renderedProducts}</ContentContainer>;
-}
+  const renderedProducts = sortedData.map((product) => (
+    <ContentBox key={product.id}>
+      <ProductImage src={product.images[0]} alt="pda logo" />
+      <ProductDetails>
+        <ProductTitle>{product.title}</ProductTitle>
+        <ProductPrice>${product.price}</ProductPrice>
+        <RatingStar value={product.rating} />
+      </ProductDetails>
+    </ContentBox>
+  ));
+
+  return (
+    <ContentContainer>
+      <SortBar
+        sortBy={sortBy}
+        sortOrder={sortOrder}
+        handleSortChange={handleSortChange}
+      />
+      {renderedProducts}
+    </ContentContainer>
+  );
+};
 
 export default ProductsList;
 
 const ContentContainer = styled.div`
   float: left;
   width: 70%;
-  padding: 1%;
+  padding-top: 8%;
   @media (max-width: 600px) {
     width: 100%;
     padding: 2%;

@@ -2,7 +2,9 @@ import * as React from "react";
 import TextField from "@mui/material/TextField";
 import Autocomplete from "@mui/material/Autocomplete";
 import styled from "styled-components";
-import { Divider } from "@mui/material";
+import { Divider, Button } from "@mui/material";
+import PriceRangeSlider from "./RangeSlider";
+import { RateRangeSlider } from "./RangeSlider";
 
 const category = [
   { label: "smartphones" },
@@ -13,23 +15,6 @@ const category = [
   { label: "home-decoration" },
 ];
 
-const price = [
-  { label: 100 },
-  { label: 200 },
-  { label: 300 },
-  { label: 400 },
-  { label: 500 },
-  { label: 1000 },
-  { label: 1500 },
-];
-
-const rating = [
-  { label: 1 },
-  { label: 2 },
-  { label: 3 },
-  { label: 4 },
-  { label: 5 },
-];
 export default function SideBar() {
   return (
     <OuterBox>
@@ -43,40 +28,48 @@ export default function SideBar() {
             <TextField {...params} label="Category" variant="standard" />
           )}
         />
+        <PriceRangeSlider />
+        <hr />
+        <RateRangeSlider />
+        <Button
+          variant="contained"
+          style={{
+            float: "right",
+            color: "white",
+          }}
+        >
+          Search
+        </Button>
       </Boxes>
     </OuterBox>
   );
 }
 
 const OuterBox = styled.div`
-  position: static;
   float: left;
-  width: 100vw;
   width: 25%;
   margin: 1%;
-  @media (min-width: 600px) {
-    width: 25%;
-    margin: 1%;
-  }
+  height: 50vh;
+  padding-top: 5%;
   @media (max-width: 600px) {
-    width: 95%;
-    height: 210px;
-    padding-top: 20px;
+    width: 100%;
+    // overflow: hidden;
+    // max-height: 65vh
   }
 `;
 
 const BoxContent = styled(Autocomplete)`
   margin-top: 5%;
 `;
+
 const Boxes = styled.div`
   position: fixed;
-  @media (min-width: 600px) {
-    width: 22%;
-    margin: 1%;
-  }
+  width: 23%;
+  margin: 1%;
   @media (max-width: 600px) {
-    width: 95%;
+    width: 90%;
     position: absolute;
+    padding: 4%;
   }
 `;
 
