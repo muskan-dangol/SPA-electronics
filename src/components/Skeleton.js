@@ -12,7 +12,7 @@ const shimmerAnimation = keyframes`
 const OuterContainer = styled.div`
   position: relative;
   overflow: hidden;
-  float:right;
+  float: right;
   background-color: #e5e5e5;
   border-radius: 2px;
   margin: 5px 0px;

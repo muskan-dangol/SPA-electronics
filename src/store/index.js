@@ -1,12 +1,5 @@
-//central export point
+import { createStore, applyMiddleware } from "redux";
+import thunk from "redux-thunk";
+import reducer from "./reducer";
 
-import { configureStore } from "@reduxjs/toolkit";
-import { productsReducer } from "./slices/productsSlice";
-
-export const store = configureStore({
-  reducer: {
-    products: productsReducer,
-  },
-});
-
-export * from './thunks/fetchProducts';
+export const store = createStore(reducer, applyMiddleware(thunk));
