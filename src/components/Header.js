@@ -16,6 +16,7 @@ const Container = styled.div`
   display: flex;
   position: fixed;
   height: 50px;
+  z-index:3;
 `;
 const Button = styled.button`
   padding: 3px;

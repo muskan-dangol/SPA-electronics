@@ -3,7 +3,7 @@ import styled from "styled-components";
 export const ContentContainer = styled.div`
   float: left;
   width: 70%;
-  padding-top: 8%;
+  padding-top: 6%;
   @media (max-width: 600px) {
     width: 100%;
     padding: 2%;
@@ -64,3 +64,4 @@ export const ProductDetails = styled.div`
   padding-top: 0.5rem;
   padding-bottom: 0.5rem;
 `;
+

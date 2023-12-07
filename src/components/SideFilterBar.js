@@ -20,7 +20,7 @@ export default function SideFilterBar({ data }) {
   return (
     <OuterBox>
       <Boxes>
-        <h1>Products</h1>
+        <h1>Products:</h1>
         <Filter>Filter with:</Filter>
         <Divider />
         <FormContent variant="standard">

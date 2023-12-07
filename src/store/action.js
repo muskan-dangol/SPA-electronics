@@ -7,6 +7,7 @@ export const FETCH_PRODUCT_FAILURE = "FETCH_DATA_FAILURE";
 export const ADD_CATEGORY_FILTER = "ADD_CATEGORY_FILTER";
 export const ADD_PRICE_FILTER = "ADD_PRICE_FILTER";
 export const ADD_RATING_FILTER = "ADD_RATING_FILTER";
+export const ADD_PRODUCT_SEARCH = "ADD_PRODUCT_SEARCH";
 
 const fetchProductRequest = () => {
   return {
@@ -44,6 +45,13 @@ export const addRatingFilter = (ratingRange) => {
   return {
     type: ADD_RATING_FILTER,
     payload: ratingRange,
+  };
+};
+
+export const addProductSearch = (searchTerm) => {
+  return {
+    type: ADD_PRODUCT_SEARCH,
+    payload: searchTerm,
   };
 };
 

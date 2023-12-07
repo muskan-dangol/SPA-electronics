@@ -5,8 +5,8 @@ export const OuterBox = styled.div`
   float: left;
   width: 25%;
   margin: 1%;
-  height: 50vh;
-  padding-top: 5%;
+  height: 40vh;
+  padding-top: 3%;
   @media (max-width: 600px) {
     width: 100%;
     // overflow: hidden;

@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchProduct } from "../store/action";
-import { createContext } from "react";
 import RatingStar from "./StarRating";
 import Skeleton from "./Skeleton";
 import SortBar from "./SortBar";
@@ -15,12 +14,17 @@ import {
   ProductDetails,
 } from "./ProductListCss";
 
-export const ProductContext = createContext();
-
 const ProductsList = () => {
   const dispatch = useDispatch();
-  const { data, isLoading, error, priceRange, selectedCategory, ratingRange } =
-    useSelector((state) => state) || {};
+  const {
+    data,
+    isLoading,
+    error,
+    priceRange,
+    selectedCategory,
+    ratingRange,
+    searchTerm,
+  } = useSelector((state) => state) || {};
   const productList = data.products || [];
 
   console.log(selectedCategory);
@@ -51,13 +55,18 @@ const ProductsList = () => {
   });
 
   const filterCategory = sortedData.filter((product) => {
+    const searchCondition =
+    product.title.toLowerCase().includes(searchTerm.toLowerCase());
+    console.log(searchCondition);
     const categoryCondition =
       !selectedCategory ||
       product.category.toLowerCase() === selectedCategory.toLowerCase();
     const ratingCondition = !ratingRange || product.rating <= ratingRange;
     const priceCondition =
       product.price >= priceRange[0] && product.price <= priceRange[1];
-    return categoryCondition && ratingCondition && priceCondition;
+    return (
+      categoryCondition && ratingCondition && priceCondition && searchCondition
+    );
   });
 
   let renderedProducts;
@@ -65,8 +74,8 @@ const ProductsList = () => {
   if (isLoading) {
     return (renderedProducts = (
       <Skeleton
-        times={7}
-        width="70%"
+        times={10}
+        width="100%"
         height="4vh"
         animation="1.5s ease infinite"
       />

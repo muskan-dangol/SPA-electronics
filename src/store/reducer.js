@@ -5,6 +5,7 @@ import {
   ADD_PRICE_FILTER,
   ADD_CATEGORY_FILTER,
   ADD_RATING_FILTER,
+  ADD_PRODUCT_SEARCH
 } from "./action";
 
 const initialState = {
@@ -14,6 +15,7 @@ const initialState = {
   priceRange: [0, 2000],
   selectedCategory: "",
   ratingRange: 5,
+  searchTerm: ""
 };
 
 const reducer = (state = initialState, action) => {
@@ -50,6 +52,11 @@ const reducer = (state = initialState, action) => {
       return {
         ...state,
         ratingRange: action.payload,
+      };
+      case ADD_PRODUCT_SEARCH:
+      return {
+        ...state,
+        searchTerm: action.payload,
       };
     default:
       return state;
