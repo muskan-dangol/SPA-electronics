@@ -4,7 +4,7 @@ import { addCategoryFilter } from "../store/action";
 import { Divider, Select, InputLabel, MenuItem } from "@mui/material";
 import { OuterBox, FormContent, Boxes, Filter } from "./SideFilterBarCss";
 import PriceRangeFilter from "./PriceRangeFilter";
-import { RateRangeSlider } from "./RateRangeSlider";
+import RatingFilter from "./RateRangeSlider";
 
 export default function SideFilterBar({ data }) {
   const dispatch = useDispatch();
@@ -36,7 +36,7 @@ export default function SideFilterBar({ data }) {
         </FormContent>
         <PriceRangeFilter />
         <hr />
-        <RateRangeSlider />
+        <RatingFilter />
       </Boxes>
     </OuterBox>
   );

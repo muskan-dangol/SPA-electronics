@@ -5,12 +5,14 @@ export const OuterBox = styled.div`
   float: left;
   width: 25%;
   margin: 1%;
-  height: 40vh;
   padding-top: 3%;
   @media (max-width: 600px) {
     width: 100%;
-    // overflow: hidden;
-    // max-height: 65vh
+    min-height: 50vh;
+  }
+  @media (max-width: 500px) {
+    width: 100%;
+    min-height: 40vh;
   }
 `;
 export const FormContent = styled(FormControl)`

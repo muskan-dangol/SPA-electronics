@@ -1,33 +1,67 @@
 import { useDispatch, useSelector } from "react-redux";
 import { addRatingFilter } from "../store/action";
-import { Box, Typography } from "@mui/material";
-import Slider from "@mui/material/Slider";
+import { GrStar } from "react-icons/gr";
+import { Typography, Box } from "@mui/material";
 import styled from "styled-components";
 
-export function RateRangeSlider() {
+const RatingFilter = () => {
   const dispatch = useDispatch();
-  const { ratingRange} = useSelector((state) => state);
+  const { ratingRange } = useSelector((state) => state);
   const currentRating = Number(ratingRange);
 
-const handleRatingChange = (e) => {
-  dispatch(addRatingFilter(e.target.value));
-}
-  return (
-    <BoxComponent>
-      <Typography>Ratings</Typography>
-      <Slider
-        onChange={handleRatingChange}
-        value={currentRating}
-        valueLabelDisplay="auto"
-        step={0.5}
-        marks
-        min={1}
-        max={5}
-      />
-    </BoxComponent>
-  );
-}
+  const handleRatingChange = (givenRating) => {
+    dispatch(addRatingFilter(givenRating));
+  };
 
-const BoxComponent = styled(Box)`
-  margin: 5% 0;
+  return (
+    <BoxContainer>
+      <Typography>Ratings</Typography>
+      <Container>
+        {[...Array(5)].map((item, index) => {
+          const givenRating = index + 1;
+          return (
+            <label key={index}>
+              <Radio
+                type="radio"
+                value={givenRating}
+                onClick={() => handleRatingChange(givenRating)}
+              />
+              <Rating>
+                <ResponsiveStar
+                  color={
+                    givenRating < currentRating || givenRating === currentRating
+                      ? "000"
+                      : "rgb(192,192,192)"
+                  }
+                />
+              </Rating>
+            </label>
+          );
+        })}
+      </Container>
+    </BoxContainer>
+  );
+};
+
+export default RatingFilter;
+
+const BoxContainer = styled(Box)`
+  width: 100%;
+`;
+const Container = styled.div`
+  padding-top: 2%;
+  display: flex;
+`;
+const Radio = styled.input`
+  display: none;
+`;
+const Rating = styled.div`
+  cursor: pointer;
+  padding: 10%;
+`;
+const ResponsiveStar = styled(GrStar)`
+  font-size: 200%; // Adjust the size using viewport units
+  @media (max-width: 700px) {
+    font-size: 30px;
+  }
 `;
