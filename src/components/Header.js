@@ -1,22 +1,25 @@
 import styled from "styled-components";
+import ProductSearch from "./ProductSearch";
 
 function Header() {
   return (
     <Container>
       <Button>PHONO</Button>
+      <ProductSearch />
     </Container>
   );
 }
 export default Header;
 
 const Container = styled.div`
+  position: relative;
   width: 100%;
   padding: 5px;
   background-color: #e2effe;
   display: flex;
   position: fixed;
   height: 50px;
-  z-index:3;
+  z-index: 3;
 `;
 const Button = styled.button`
   padding: 3px;

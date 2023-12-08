@@ -1,10 +1,8 @@
 import { FormControl, InputLabel, Select, MenuItem } from "@mui/material";
 import styled from "styled-components";
-import ProductSearch from "./ProductSearch";
 
 const SortBar = ({ sortBy, handleSortChange, sortOrder }) => (
   <SortingNav>
-    <ProductSearch />
     <FormContent variant="standard" sx={{ m: 1, minWidth: 120 }}>
       <InputLabel>Sort Products By:</InputLabel>
       <Select

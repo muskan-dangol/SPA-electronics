@@ -16,7 +16,7 @@ export default function ProductSearch() {
       <TextField
         size="small"
         fullWidth
-        label="Search Products"
+        label="Search Products..."
         onChange={handleSearchTerm}
         value={searchTerm}
       />
@@ -25,10 +25,9 @@ export default function ProductSearch() {
 }
 
 const SearchContent = styled(Box)`
-  float: left;
-  width: 31.5%;
+  background-color: white;
+  width: 30%;
+  align-self: center;
   position: absolute;
-  top: 20px;
-  height: 50px;
-  transform: translate(0%, -10%);
+  left: 28%;
 `;
