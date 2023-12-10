@@ -29,5 +29,5 @@ const SearchContent = styled(Box)`
   width: 30%;
   align-self: center;
   position: absolute;
-  left: 28%;
+  left: 35%;
 `;
