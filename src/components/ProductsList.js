@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchProduct } from "../store/action";
+import { fetchProduct, editProduct } from "../store/action";
 import RatingStar from "./StarRating";
 import Skeleton from "./Skeleton";
 import SortBar from "./SortBar";
@@ -10,7 +10,7 @@ import {
   ContentBox,
   ProductTitle,
   ProductPrice,
-  ProductImage,
+  // ProductImage,
   ProductDetails,
 } from "./ProductListCss";
 
@@ -25,9 +25,7 @@ const ProductsList = () => {
     ratingRange,
     searchTerm,
   } = useSelector((state) => state) || {};
-  const productList = data.products || [];
-
-  console.log(selectedCategory);
+  const productList = data || [];
   const [sortOrder, setSortOrder] = useState("asc");
   const [sortBy, setSortBy] = useState("");
 
@@ -38,6 +36,9 @@ const ProductsList = () => {
   const handleSortChange = (newSortOrder, newSortBy) => {
     setSortBy(newSortBy);
     setSortOrder(newSortOrder);
+  };
+  const handleRatingChange = (id, newRating) => {
+    dispatch(editProduct(id, { rating: newRating }));
   };
 
   const sortedData = productList.sort((a, b) => {
@@ -55,8 +56,9 @@ const ProductsList = () => {
   });
 
   const filterCategory = sortedData.filter((product) => {
-    const searchCondition =
-    product.title.toLowerCase().includes(searchTerm.toLowerCase());
+    const searchCondition = product.title
+      .toLowerCase()
+      .includes(searchTerm.toLowerCase());
     console.log(searchCondition);
     const categoryCondition =
       !selectedCategory ||
@@ -71,7 +73,7 @@ const ProductsList = () => {
 
   let renderedProducts;
 
-  if (isLoading) {
+  if (isLoading && productList.length === 0) {
     return (renderedProducts = (
       <Skeleton
         times={10}
@@ -85,11 +87,14 @@ const ProductsList = () => {
   } else {
     renderedProducts = filterCategory.map((product) => (
       <ContentBox key={product.id}>
-        <ProductImage src={product.images[0]} alt="pda logo" />
+        {/* <ProductImage src={product.images[0]} alt="pda logo" /> */}
         <ProductDetails>
           <ProductTitle>{product.title}</ProductTitle>
           <ProductPrice>${product.price}</ProductPrice>
-          <RatingStar value={product.rating} />
+          <RatingStar
+            value={product.rating}
+            onChange={(newRating) => handleRatingChange(product.id, newRating)}
+          />
         </ProductDetails>
       </ContentBox>
     ));
