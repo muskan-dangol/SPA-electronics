@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import { fetchProduct, editProduct } from "../store/action";
-import RatingStar from "./StarRating";
-import Skeleton from "./Skeleton";
-import SortBar from "./SortBar";
-import SideFilterBar from "./SideFilterBar";
+import RatingStar from "../components/StarRating";
+import Skeleton from "../components/Skeleton";
+import SortBar from "../components/SortBar";
+import SideFilterBar from "../components/SideFilterBar";
 import {
   ContentContainer,
   ContentBox,
@@ -12,10 +13,12 @@ import {
   ProductPrice,
   // ProductImage,
   ProductDetails,
-} from "./ProductListCss";
+} from "../components/ProductListCss";
 
 const ProductsList = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
+
   const {
     data,
     isLoading,
@@ -33,14 +36,19 @@ const ProductsList = () => {
     dispatch(fetchProduct(sortOrder, sortBy));
   }, []);
 
+  const handleClick = (product) => {
+    navigate(`/productDetail/${product.title}/${product.id}`);
+  };
+
   const handleSortChange = (newSortOrder, newSortBy) => {
     setSortBy(newSortBy);
     setSortOrder(newSortOrder);
+    
   };
-  const handleRatingChange = (id, newRating) => {
+  const handleRatingChange = (e, id, newRating) => {
+    e.stopPropagation();
     dispatch(editProduct(id, { rating: newRating }));
   };
-
   const sortedData = productList.sort((a, b) => {
     const order = sortOrder === "asc" ? 1 : -1;
     if (sortBy === "title") {
@@ -59,7 +67,6 @@ const ProductsList = () => {
     const searchCondition = product.title
       .toLowerCase()
       .includes(searchTerm.toLowerCase());
-    console.log(searchCondition);
     const categoryCondition =
       !selectedCategory ||
       product.category.toLowerCase() === selectedCategory.toLowerCase();
@@ -70,6 +77,7 @@ const ProductsList = () => {
       categoryCondition && ratingCondition && priceCondition && searchCondition
     );
   });
+  
 
   let renderedProducts;
 
@@ -86,14 +94,14 @@ const ProductsList = () => {
     renderedProducts = <div>Error fetching data...</div>;
   } else {
     renderedProducts = filterCategory.map((product) => (
-      <ContentBox key={product.id}>
+      <ContentBox key={product.id} onClick={() => handleClick(product)}>
         {/* <ProductImage src={product.images[0]} alt="pda logo" /> */}
         <ProductDetails>
           <ProductTitle>{product.title}</ProductTitle>
           <ProductPrice>${product.price}</ProductPrice>
           <RatingStar
             value={product.rating}
-            onChange={(newRating) => handleRatingChange(product.id, newRating)}
+            onChange={(e,newRating) => handleRatingChange(e, product.id, newRating)}
           />
         </ProductDetails>
       </ContentBox>

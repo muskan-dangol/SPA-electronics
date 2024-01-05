@@ -1,6 +1,10 @@
 import styled from "styled-components";
 
 export const ContentContainer = styled.div`
+  position: absolute;
+  top: 30px;
+  right: 0;
+  width: 200px;
   float: left;
   width: 70%;
   padding-top: 6%;
@@ -64,4 +68,3 @@ export const ProductDetails = styled.div`
   padding-top: 0.5rem;
   padding-bottom: 0.5rem;
 `;
-

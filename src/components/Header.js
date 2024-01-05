@@ -1,10 +1,12 @@
+import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import ProductSearch from "./ProductSearch";
 
 function Header() {
+  const navigate = useNavigate();
   return (
     <Container>
-      <Button>PHONO</Button>
+      <Button onClick={() => navigate("/")}>PHONO</Button>
       <ProductSearch />
     </Container>
   );

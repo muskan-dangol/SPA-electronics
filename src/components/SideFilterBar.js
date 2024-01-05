@@ -15,6 +15,10 @@ export default function SideFilterBar({ data }) {
 
   const handleChangeFiltering = (e) => {
     dispatch(addCategoryFilter(e.target.value));
+    const newUrl = `/products${
+      e.target.value ? `?category=${e.target.value}` : ""
+    }`;
+    window.history.replaceState({}, "", newUrl);
   };
 
   return (

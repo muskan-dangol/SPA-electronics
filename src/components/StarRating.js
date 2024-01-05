@@ -3,15 +3,15 @@ import React from "react";
 import styled from "styled-components";
 
 const RatingStar = ({ value, onChange }) => {
-  const handleClick = (selectedValue) => {
-    onChange(selectedValue);
+  const handleClick = (e, selectedValue) => {
+    onChange(e, selectedValue);
   };
 
   const stars = [];
   for (let i = 1; i <= 5; i++) {
     const fillClass = i <= value ? "filled" : "empty";
     stars.push(
-      <Star key={i} className={fillClass} onClick={() => handleClick(i)}>
+      <Star key={i} className={fillClass} onClick={(e) => handleClick(e, i)}>
         &#9733;
       </Star>
     );
@@ -20,7 +20,7 @@ const RatingStar = ({ value, onChange }) => {
 };
 
 const StarContainer = styled.div`
-  padding: 4px;
+  // padding: 4px;
 `;
 
 const Star = styled.span`
