@@ -1,13 +1,15 @@
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import ProductSearch from "./ProductSearch";
+import CartBadge from "./CartBadge";
 
 function Header() {
   const navigate = useNavigate();
   return (
     <Container>
-      <Button onClick={() => navigate("/")}>PHONO</Button>
-      <ProductSearch />
+      <Button onClick={() => navigate("/")} >PHONO</Button>
+      <ProductSearch sx={{ flexGrow: 1 }}/>
+      <CartBadge/>
     </Container>
   );
 }

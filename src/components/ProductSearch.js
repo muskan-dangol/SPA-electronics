@@ -12,7 +12,7 @@ export default function ProductSearch() {
     dispatch(addProductSearch(e.target.value));
   };
   return (
-    <SearchContent>
+    <SearchContent sx={{ flexGrow: 1 }}>
       <TextField
         size="small"
         fullWidth

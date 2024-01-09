@@ -13,6 +13,8 @@ export const ADD_PRICE_FILTER = "ADD_PRICE_FILTER";
 export const ADD_RATING_FILTER = "ADD_RATING_FILTER";
 export const ADD_PRODUCT_SEARCH = "ADD_PRODUCT_SEARCH";
 
+// cart
+export const ADD_PRODUCT_TO_CART = "ADD_PRODUCT_TO_CART";
 
 const fetchProductRequest = () => {
   return {
@@ -79,6 +81,27 @@ export const addProductSearch = (searchTerm) => {
   };
 };
 
+export const addProductToCart = (cartItem) => {
+  return {
+    type: ADD_PRODUCT_TO_CART,
+    payload: cartItem,
+  };
+};
+
+// const fetchCartSuccess = (data) => {
+//   return {
+//     type: FETCH_CART_SUCCESS,
+//     payload: data,
+//   };
+// };
+
+// const fetchCartFailure = (error) => {
+//   return {
+//     type: FETCH_CART_FAILURE,
+//     payload: error,
+//   };
+// };
+
 export const fetchProduct = () => {
   return (dispatch) => {
     dispatch(fetchProductRequest());
@@ -94,18 +117,33 @@ export const fetchProduct = () => {
   };
 };
 
-
 export const editProduct = (id, updatedData) => {
   return (dispatch) => {
     dispatch(editProductRequest());
     axios
       .put(`http://localhost:3005/products/${id}`, updatedData)
       .then(() => {
-        dispatch(editProductSuccess)
+        dispatch(editProductSuccess);
         dispatch(fetchProduct());
       })
       .catch((error) => {
         dispatch(editProductFailure(error.message));
       });
   };
+};
+
+// cart
+
+export const addCart = (id, product) => async (dispatch) => {
+  try {
+    const response = await axios.post("http://localhost:3005/cart", product);
+    dispatch({
+      type: ADD_PRODUCT_TO_CART,
+      payload: response.data.id,
+    });
+    localStorage.setItem("CartItem", response.data.token);
+    console.log(response);
+  } catch (error) {
+    console.error("Error adding product to cart:", error);
+  }
 };

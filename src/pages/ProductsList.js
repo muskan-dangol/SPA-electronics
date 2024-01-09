@@ -40,11 +40,13 @@ const ProductsList = () => {
     navigate(`/productDetail/${product.title}/${product.id}`);
   };
 
+  
   const handleSortChange = (newSortOrder, newSortBy) => {
     setSortBy(newSortBy);
     setSortOrder(newSortOrder);
     
   };
+  
   const handleRatingChange = (e, id, newRating) => {
     e.stopPropagation();
     dispatch(editProduct(id, { rating: newRating }));

@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { useParams } from "react-router-dom";
 import { fetchProduct, editProduct } from "../store/action";
 import styled from "styled-components";
-import ProductQuantity from "../components/ProductQuantity";
+import { v4 as uuidv4 } from "uuid";
 import RatingStar from "../components/StarRating";
 import { Grid, Button, Card, CardContent, Typography } from "@mui/material";
 
@@ -27,14 +27,46 @@ const ProductDetails = () => {
     e.stopPropagation();
     dispatch(editProduct(id, { rating: newRating }));
   };
+  const handleAddCart = () => {
+    const cartId = localStorage.getItem("cartId") || generateCartId();
+    const data = localStorage.getItem(cartId);
+    const existingCartItems = data ? JSON.parse(data) : [];
+    const existingCartItemIndex = existingCartItems.findIndex(
+      (item) => item.id === product.id
+    );
+    if (existingCartItemIndex !== -1) {
+      existingCartItems[existingCartItemIndex].quantity += 1;
+    } else {
+      const cartItem = {
+        id: product.id,
+        title: product.title,
+        price: product.price,
+        quantity: 1,
+      };
+      existingCartItems.push(cartItem);
+    }
+    const totalQuantity = existingCartItems.reduce(
+      (total, item) => total + item.quantity,
+      0
+    );
+    localStorage.setItem(cartId, JSON.stringify(existingCartItems || []));
+    localStorage.setItem("cartId", cartId);
+    localStorage.setItem("totalQuantity", totalQuantity.toString());
+
+    window.location.reload();
+  };
+  const generateCartId = () => {
+    return uuidv4();
+  };
+
   return (
-    <DetailContainer>
+    <DetailContainer container>
       <Button
         sx={{
           width: 100,
           marginLeft: 2,
-          marginTop: 2
-          
+          marginTop: 2,
+          height: 40,
         }}
         variant="outlined"
         onClick={() => navigate(-1)}
@@ -59,7 +91,7 @@ const ProductDetails = () => {
         </Grid>
         <Grid item sm={12} md={6}>
           <GridContainer container>
-            <Grid item sm={6} md={12}>
+            <Grid item sm={12} md={12}>
               <CardContent>
                 <Typography gutterBottom variant="h4" component="div">
                   <strong>{product.title}</strong>
@@ -68,51 +100,43 @@ const ProductDetails = () => {
                   ${product.price}
                 </Typography>
                 <Grid container spacing={1}>
-                  <Grid item xs={6} md={4}>
+                  <Grid item xs={6} md={6}>
                     <Typography variant="h6" color="text.primary">
                       <strong>Category</strong>
                     </Typography>
                   </Grid>
-                  <Grid item xs={6} md={8}>
+                  <Grid item xs={6} md={6}>
                     <Typography variant="h6" color="text.primary">
                       {product.category}
                     </Typography>
                   </Grid>
-                  <Grid item xs={6} md={4}>
+                  <Grid item xs={6} md={6}>
                     <Typography variant="h6" color="text.primary">
                       <strong>brand</strong>
                     </Typography>
                   </Grid>
-                  <Grid item xs={6} md={8}>
+                  <Grid item xs={6} md={6}>
                     <Typography variant="h6" color="text.primary">
                       {product.brand}
                     </Typography>
                   </Grid>
 
-                  <Grid item xs={6} md={4}>
+                  <Grid item xs={6} md={6}>
                     <Typography variant="h6" color="text.primary">
                       <strong>description</strong>
                     </Typography>
                   </Grid>
-                  <Grid item xs={6} md={8}>
+                  <Grid item xs={6} md={6}>
                     <Typography variant="h6" color="text.primary">
                       {product.description}
                     </Typography>
-                  </Grid>
-                  <Grid item xs={6} md={4}>
-                    <Typography variant="h6" color="text.primary">
-                      <strong>Quantity</strong>
-                    </Typography>
-                  </Grid>
-                  <Grid item xs={6} md={4}>
-                    <ProductQuantity />
                   </Grid>
                   <Grid item xs={6} md={6}>
                     <Typography variant="h6" color="text.primary">
                       <strong>Rating of Product</strong>
                     </Typography>
                   </Grid>
-                  <Grid item xs={6} md={6}>
+                  <Grid xs={6} md={6} >
                     <RatingStar
                       value={product.rating}
                       onChange={(e, newRating) =>
@@ -121,8 +145,10 @@ const ProductDetails = () => {
                     />
                   </Grid>
                 </Grid>
+                <CartButton variant="contained" onClick={handleAddCart}>
+                  Add to cart
+                </CartButton>
               </CardContent>
-              <CartButton variant="contained">Add to cart</CartButton>
             </Grid>
           </GridContainer>
         </Grid>
@@ -133,20 +159,21 @@ const ProductDetails = () => {
 
 export default ProductDetails;
 
-export const DetailContainer = styled.div`
-  position: relative;
-  top: 100px;
-  left: 5%;
-  float: left;
-  width: 90%;
-  height: 70vh;
-  border: 1px solid #c1c1c1;
-  border-radius: 15px;
-  // background-color: #e5e9ec;
+export const DetailContainer = styled(Grid)`
+  && {
+    position: relative;
+    top: 100px;
+    left: 5%;
+    width: 90%;
+    height: 100%;
+    border: 1px solid #c1c1c1;
+    border-radius: 15px;
+    // background-color: #e5e9ec;
+  }
 `;
 
 const GridContainer = styled(Grid)`
-  height: 80%;
+  height: 90%;
 `;
 
 export const CardContainer = styled(Card)`
@@ -165,7 +192,7 @@ export const CardDetails = styled(Card)`
 
 export const CartButton = styled(Button)`
   && {
-    margin: 3%;
+    margin-top: 3%;
   }
   width: 40%;
 `;
