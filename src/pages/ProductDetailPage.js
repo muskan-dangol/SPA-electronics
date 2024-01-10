@@ -136,7 +136,7 @@ const ProductDetails = () => {
                       <strong>Rating of Product</strong>
                     </Typography>
                   </Grid>
-                  <Grid xs={6} md={6} >
+                  <Grid >
                     <RatingStar
                       value={product.rating}
                       onChange={(e, newRating) =>

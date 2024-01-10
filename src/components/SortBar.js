@@ -1,8 +1,8 @@
-import { FormControl, InputLabel, Select, MenuItem } from "@mui/material";
+import { Button, FormControl, InputLabel, Select, MenuItem } from "@mui/material";
 import styled from "styled-components";
 
 const SortBar = ({ sortBy, handleSortChange, sortOrder }) => (
-  <SortingNav>
+  <SortingNav>    
     <FormContent variant="standard" sx={{ m: 1, minWidth: 120 }}>
       <InputLabel>Sort Products By:</InputLabel>
       <Select
@@ -32,6 +32,6 @@ const FormContent = styled(FormControl)`
   float: right;
   width: 31.5%;
   position: absolute;
-  top:4px;
+  top: 4px;
   transform: translate(0%, -10%);
 `;

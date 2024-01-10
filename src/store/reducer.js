@@ -9,9 +9,9 @@ import {
   EDIT_PRODUCT_REQUEST,
   EDIT_PRODUCT_SUCCESS,
   EDIT_PRODUCT_FAILURE,
-
+  ADD_DISCOUNT_PRODUCT,
   // cart
-  ADD_PRODUCT_TO_CART
+  ADD_PRODUCT_TO_CART,
 } from "./action";
 
 const initialState = {
@@ -22,7 +22,8 @@ const initialState = {
   selectedCategory: "",
   ratingRange: 5,
   searchTerm: "",
-  cartItem: ''
+  isDiscountFilterEnabled: false,
+  cartItem: "",
 };
 
 const reducer = (state = initialState, action) => {
@@ -83,11 +84,16 @@ const reducer = (state = initialState, action) => {
         ...state,
         searchTerm: action.payload,
       };
+    case ADD_DISCOUNT_PRODUCT:
+      return {
+        ...state,
+        isDiscountFilterEnabled: action.payload,
+      };
     case ADD_PRODUCT_TO_CART:
       return {
         ...state,
         cartItem: [...state.cartItem, action.payload],
-      }
+      };
     default:
       return state;
   }

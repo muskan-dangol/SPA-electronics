@@ -12,6 +12,7 @@ export const ADD_CATEGORY_FILTER = "ADD_CATEGORY_FILTER";
 export const ADD_PRICE_FILTER = "ADD_PRICE_FILTER";
 export const ADD_RATING_FILTER = "ADD_RATING_FILTER";
 export const ADD_PRODUCT_SEARCH = "ADD_PRODUCT_SEARCH";
+export const ADD_DISCOUNT_PRODUCT = "ADD_DISCOUNT_PRODUCT"
 
 // cart
 export const ADD_PRODUCT_TO_CART = "ADD_PRODUCT_TO_CART";
@@ -78,6 +79,13 @@ export const addProductSearch = (searchTerm) => {
   return {
     type: ADD_PRODUCT_SEARCH,
     payload: searchTerm,
+  };
+};
+
+export const filterByDiscount = (isEnabled) => {
+  return {
+    type: ADD_DISCOUNT_PRODUCT,
+    payload: isEnabled,
   };
 };
 

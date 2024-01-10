@@ -1,8 +1,10 @@
 import React from "react";
 import { useState, useEffect } from "react";
+import { useDispatch } from "react-redux";
 import CloseIcon from "@mui/icons-material/Close";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import RemoveCircleOutlineIcon from "@mui/icons-material/RemoveCircleOutline";
+import { filterByDiscount } from "../store/action";
 import {
   Avatar,
   Button,
@@ -14,6 +16,7 @@ import {
 } from "@mui/material";
 
 const CartItems = ({ onClose, onTotalQuantityChange }) => {
+  const dispatch = useDispatch();
   const [cartItems, setCartItems] = useState([]);
   const cartId = localStorage.getItem("cartId") || null;
   let totalQuantity = cartItems.reduce(
@@ -49,6 +52,16 @@ const CartItems = ({ onClose, onTotalQuantityChange }) => {
     );
     setCartItems(updatedCartItems);
     updateLocalStorage(updatedCartItems);
+  };
+
+  const handleClickAllProducts = () => {
+    dispatch(filterByDiscount(false));
+    onClose();
+  };
+
+  const handleClickDiscountedProducts = () => {
+    dispatch(filterByDiscount(true));
+    onClose();
   };
 
   const handleMinus = (item) => {
@@ -111,12 +124,10 @@ const CartItems = ({ onClose, onTotalQuantityChange }) => {
             </Typography>
             <Grid container spacing={2} align="center" width="100%">
               <Grid item sm={12}>
-                <Button variant="contained" onClick={onClose}>
-                  All Products
-                </Button>
-              </Grid>
-              <Grid item sm={12}>
-                <Button variant="contained" onClick={onClose}>
+                <Button
+                  variant="contained"
+                  onClick={handleClickDiscountedProducts}
+                >
                   Discounted Products
                 </Button>
               </Grid>
@@ -188,12 +199,12 @@ const CartItems = ({ onClose, onTotalQuantityChange }) => {
             ))}
             <Grid container>
               <Grid item sm={10} xs={10} mt={2}>
-                <Typography variant="h5">
+                <Typography variant="h6">
                   <strong>Total Amount:</strong>
                 </Typography>
               </Grid>
               <Grid item sm={2} xs={2} mt={2}>
-                <Typography variant="h5">
+                <Typography variant="h6">
                   <strong>{totalAmount}</strong>
                 </Typography>
               </Grid>

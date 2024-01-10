@@ -6,8 +6,8 @@ import RatingStar from "../components/StarRating";
 import Skeleton from "../components/Skeleton";
 import SortBar from "../components/SortBar";
 import SideFilterBar from "../components/SideFilterBar";
+import { Grid } from "@mui/material";
 import {
-  ContentContainer,
   ContentBox,
   ProductTitle,
   ProductPrice,
@@ -26,6 +26,7 @@ const ProductsList = () => {
     priceRange,
     selectedCategory,
     ratingRange,
+    isDiscountFilterEnabled,
     searchTerm,
   } = useSelector((state) => state) || {};
   const productList = data || [];
@@ -40,13 +41,11 @@ const ProductsList = () => {
     navigate(`/productDetail/${product.title}/${product.id}`);
   };
 
-  
   const handleSortChange = (newSortOrder, newSortBy) => {
     setSortBy(newSortBy);
     setSortOrder(newSortOrder);
-    
   };
-  
+
   const handleRatingChange = (e, id, newRating) => {
     e.stopPropagation();
     dispatch(editProduct(id, { rating: newRating }));
@@ -75,11 +74,17 @@ const ProductsList = () => {
     const ratingCondition = !ratingRange || product.rating <= ratingRange;
     const priceCondition =
       product.price >= priceRange[0] && product.price <= priceRange[1];
+    const discountFilter = isDiscountFilterEnabled
+      ? product.discountPercentage > 0
+      : true;
     return (
-      categoryCondition && ratingCondition && priceCondition && searchCondition
+      categoryCondition &&
+      ratingCondition &&
+      priceCondition &&
+      searchCondition &&
+      discountFilter
     );
   });
-  
 
   let renderedProducts;
 
@@ -103,7 +108,9 @@ const ProductsList = () => {
           <ProductPrice>${product.price}</ProductPrice>
           <RatingStar
             value={product.rating}
-            onChange={(e,newRating) => handleRatingChange(e, product.id, newRating)}
+            onChange={(e, newRating) =>
+              handleRatingChange(e, product.id, newRating)
+            }
           />
         </ProductDetails>
       </ContentBox>
@@ -111,17 +118,19 @@ const ProductsList = () => {
   }
 
   return (
-    <div>
-      <SideFilterBar data={sortedData} />
-      <ContentContainer>
+    <Grid container>
+      <Grid item xs={12} sm={3.5} md={3.2} mt={5}>
+        <SideFilterBar data={sortedData} />
+      </Grid>
+      <Grid item xs={12} sm={8} md={8.8} mt={7}>
         <SortBar
           sortBy={sortBy}
           sortOrder={sortOrder}
           handleSortChange={handleSortChange}
         />
         {renderedProducts}
-      </ContentContainer>
-    </div>
+      </Grid>
+    </Grid>
   );
 };
 
