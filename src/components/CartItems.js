@@ -1,6 +1,7 @@
 import React from "react";
 import { useState, useEffect } from "react";
 import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import CloseIcon from "@mui/icons-material/Close";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import RemoveCircleOutlineIcon from "@mui/icons-material/RemoveCircleOutline";
@@ -17,6 +18,7 @@ import {
 
 const CartItems = ({ onClose, onTotalQuantityChange }) => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const [cartItems, setCartItems] = useState([]);
   const cartId = localStorage.getItem("cartId") || null;
   let totalQuantity = cartItems.reduce(
@@ -54,14 +56,10 @@ const CartItems = ({ onClose, onTotalQuantityChange }) => {
     updateLocalStorage(updatedCartItems);
   };
 
-  const handleClickAllProducts = () => {
-    dispatch(filterByDiscount(false));
-    onClose();
-  };
-
   const handleClickDiscountedProducts = () => {
     dispatch(filterByDiscount(true));
-    onClose();
+    onClose(true);
+    navigate("/");
   };
 
   const handleMinus = (item) => {

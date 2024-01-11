@@ -33,7 +33,6 @@ const CartBadge = () => {
     <>
       <IconButton
         sx={{
-          ml: "auto",
           mt: "5px",
           marginRight: "30px",
           borderRadius: "2px",

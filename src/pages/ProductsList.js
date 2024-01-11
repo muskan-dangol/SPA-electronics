@@ -38,7 +38,7 @@ const ProductsList = () => {
   }, []);
 
   const handleClick = (product) => {
-    navigate(`/productDetail/${product.title}/${product.id}`);
+    navigate(`/productDetail/${product.title}/${product._id}`);
   };
 
   const handleSortChange = (newSortOrder, newSortBy) => {
@@ -46,9 +46,9 @@ const ProductsList = () => {
     setSortOrder(newSortOrder);
   };
 
-  const handleRatingChange = (e, id, newRating) => {
+  const handleRatingChange = (e, _id, newRating) => {
     e.stopPropagation();
-    dispatch(editProduct(id, { rating: newRating }));
+    dispatch(editProduct(_id, { rating: newRating }));
   };
   const sortedData = productList.sort((a, b) => {
     const order = sortOrder === "asc" ? 1 : -1;
@@ -101,7 +101,7 @@ const ProductsList = () => {
     renderedProducts = <div>Error fetching data...</div>;
   } else {
     renderedProducts = filterCategory.map((product) => (
-      <ContentBox key={product.id} onClick={() => handleClick(product)}>
+      <ContentBox key={product._id} onClick={() => handleClick(product)}>
         {/* <ProductImage src={product.images[0]} alt="pda logo" /> */}
         <ProductDetails>
           <ProductTitle>{product.title}</ProductTitle>
@@ -109,7 +109,7 @@ const ProductsList = () => {
           <RatingStar
             value={product.rating}
             onChange={(e, newRating) =>
-              handleRatingChange(e, product.id, newRating)
+              handleRatingChange(e, product._id, newRating)
             }
           />
         </ProductDetails>

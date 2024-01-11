@@ -15,12 +15,24 @@ function Header() {
     dispatch(filterByDiscount(false));
     navigate("/");
   };
+  const handleAddProducts = () => {
+    navigate("/productForm");
+  };
 
   return (
     <Container>
       <Phono onClick={() => navigate("/")}>PHONO</Phono>
       <Button onClick={handleAllProducts}>All Products</Button>
       <ProductSearch sx={{ flexGrow: 1 }} />
+      <Button
+        sx={{
+          ml: "auto",
+        }}
+        variant="outlined"
+        onClick={handleAddProducts}
+      >
+        Add Products
+      </Button>
       <CartBadge />
     </Container>
   );

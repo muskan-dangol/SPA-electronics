@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { useParams } from "react-router-dom";
-import { fetchProduct, editProduct } from "../store/action";
+import { fetchProductById, editProduct } from "../store/action";
 import styled from "styled-components";
 import { v4 as uuidv4 } from "uuid";
 import RatingStar from "../components/StarRating";
@@ -14,18 +14,18 @@ const ProductDetails = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    dispatch(fetchProduct(productId));
+    dispatch(fetchProductById(productId));
   }, []);
 
   const product = useSelector((state) =>
-    state.data.find((item) => item.id === parseInt(productId))
-  );
+    state.data.find((item) => item._id === productId)
+);
   if (!product) {
     return <div>Product not found</div>;
   }
-  const handleRatingChange = (e, id, newRating) => {
+  const handleRatingChange = (e, _id, newRating) => {
     e.stopPropagation();
-    dispatch(editProduct(id, { rating: newRating }));
+    dispatch(editProduct(_id, { rating: newRating }));
   };
   const handleAddCart = () => {
     const cartId = localStorage.getItem("cartId") || generateCartId();
@@ -140,7 +140,7 @@ const ProductDetails = () => {
                     <RatingStar
                       value={product.rating}
                       onChange={(e, newRating) =>
-                        handleRatingChange(e, product.id, newRating)
+                        handleRatingChange(e, product._id, newRating)
                       }
                     />
                   </Grid>

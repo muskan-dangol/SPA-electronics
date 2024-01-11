@@ -1,6 +1,7 @@
 import Header from "./components/Header";
 import ProductsList from "./pages/ProductsList";
 import ProductDetails from "./pages/ProductDetailPage";
+import ProductForm from "./pages/ProductForm";
 import { Routes, Route } from "react-router-dom";
 
 function App() {
@@ -12,6 +13,10 @@ function App() {
           <Route
             path="/productDetail/:productTitle/:productId"
             element={<ProductDetails />}
+          />
+          <Route
+            path="/productForm"
+            element={<ProductForm />}
           />
         </Routes>
     </div>
