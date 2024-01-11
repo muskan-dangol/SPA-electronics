@@ -15,11 +15,17 @@ const ProductDetails = () => {
 
   useEffect(() => {
     dispatch(fetchProductById(productId));
-  }, []);
+  }, [dispatch, productId]);
 
   const product = useSelector((state) =>
-    state.data.find((item) => item._id === productId)
-);
+    state.productDetail
+  );
+  const isLoading = useSelector((state) => state.isLoading);
+
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
+
   if (!product) {
     return <div>Product not found</div>;
   }
@@ -27,18 +33,19 @@ const ProductDetails = () => {
     e.stopPropagation();
     dispatch(editProduct(_id, { rating: newRating }));
   };
+
   const handleAddCart = () => {
     const cartId = localStorage.getItem("cartId") || generateCartId();
     const data = localStorage.getItem(cartId);
     const existingCartItems = data ? JSON.parse(data) : [];
     const existingCartItemIndex = existingCartItems.findIndex(
-      (item) => item.id === product.id
+      (item) => item.id === product._id
     );
     if (existingCartItemIndex !== -1) {
       existingCartItems[existingCartItemIndex].quantity += 1;
     } else {
       const cartItem = {
-        id: product.id,
+        id: product._id,
         title: product.title,
         price: product.price,
         quantity: 1,
@@ -52,9 +59,8 @@ const ProductDetails = () => {
     localStorage.setItem(cartId, JSON.stringify(existingCartItems || []));
     localStorage.setItem("cartId", cartId);
     localStorage.setItem("totalQuantity", totalQuantity.toString());
-
-    window.location.reload();
   };
+
   const generateCartId = () => {
     return uuidv4();
   };
@@ -136,7 +142,7 @@ const ProductDetails = () => {
                       <strong>Rating of Product</strong>
                     </Typography>
                   </Grid>
-                  <Grid >
+                  <Grid>
                     <RatingStar
                       value={product.rating}
                       onChange={(e, newRating) =>

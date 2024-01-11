@@ -158,17 +158,15 @@ export const fetchProduct = () => {
   };
 };
 export const fetchProductById = (productId) => {
-  return (dispatch) => {
+  return async (dispatch) => {
     dispatch(fetchProductByIdRequest());
-    axios
-      .get(`http://localhost:3005/${productId}`)
-      .then((response) => {
-        const productDetail = response.data;
-        dispatch(fetchProductByIdSuccess(productDetail));
-      })
-      .catch((error) => {
-        dispatch(fetchProductByIdFailure(error.message));
-      });
+    try {
+      const response = await axios.get(`http://localhost:3005/${productId}`);
+      const productDetail = response.data;
+      dispatch(fetchProductByIdSuccess(productDetail));
+    } catch (error) {
+      dispatch(fetchProductByIdFailure(error.message));
+    }
   };
 };
 

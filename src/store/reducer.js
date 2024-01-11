@@ -64,7 +64,7 @@ const reducer = (state = initialState, action) => {
       return {
         ...state,
         isLoading: false,
-        dataById: action.payload,
+        productDetail: action.payload,
       };
     case FETCH_PRODUCTBYID_FAILURE:
       return {
