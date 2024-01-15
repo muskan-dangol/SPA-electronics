@@ -178,6 +178,7 @@ export const editProduct = (_id, updatedData) => {
       .then(() => {
         dispatch(editProductSuccess);
         dispatch(fetchProduct());
+        dispatch(fetchProductById(_id))
       })
       .catch((error) => {
         dispatch(editProductFailure(error.message));

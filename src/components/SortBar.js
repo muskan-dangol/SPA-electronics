@@ -1,4 +1,4 @@
-import { Button, FormControl, InputLabel, Select, MenuItem } from "@mui/material";
+import { FormControl, InputLabel, Select, MenuItem } from "@mui/material";
 import styled from "styled-components";
 
 const SortBar = ({ sortBy, handleSortChange, sortOrder }) => (

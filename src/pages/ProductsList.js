@@ -1,12 +1,13 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import { useQuery } from "@tanstack/react-query";
 import { fetchProduct, editProduct } from "../store/action";
 import RatingStar from "../components/StarRating";
-import Skeleton from "../components/Skeleton";
+import LoadingSkeleton from "../components/Skeleton";
 import SortBar from "../components/SortBar";
 import SideFilterBar from "../components/SideFilterBar";
-import { Grid } from "@mui/material";
+import { Grid, Box } from "@mui/material";
 import {
   ContentBox,
   ProductTitle,
@@ -90,31 +91,31 @@ const ProductsList = () => {
 
   if (isLoading && productList.length === 0) {
     return (renderedProducts = (
-      <Skeleton
-        times={10}
-        width="100%"
-        height="4vh"
-        animation="1.5s ease infinite"
-      />
+      <Box sx={{ overflow: "hidden" }}>
+        <LoadingSkeleton count={10} />
+      </Box>
     ));
   } else if (error) {
     renderedProducts = <div>Error fetching data...</div>;
   } else {
-    renderedProducts = filterCategory.map((product) => (
-      <ContentBox key={product._id} onClick={() => handleClick(product)}>
-        {/* <ProductImage src={product.images[0]} alt="pda logo" /> */}
-        <ProductDetails>
-          <ProductTitle>{product.title}</ProductTitle>
-          <ProductPrice>${product.price}</ProductPrice>
-          <RatingStar
-            value={product.rating}
-            onChange={(e, newRating) =>
-              handleRatingChange(e, product._id, newRating)
-            }
-          />
-        </ProductDetails>
-      </ContentBox>
-    ));
+    renderedProducts =
+      productList &&
+      productList.length > 0 &&
+      filterCategory.map((product) => (
+        <ContentBox key={product._id} onClick={() => handleClick(product)}>
+          {/* <ProductImage src={product.images[0]} alt="pda logo" /> */}
+          <ProductDetails>
+            <ProductTitle>{product.title}</ProductTitle>
+            <ProductPrice>${product.price}</ProductPrice>
+            <RatingStar
+              value={product.rating}
+              onChange={(e, newRating) =>
+                handleRatingChange(e, product._id, newRating)
+              }
+            />
+          </ProductDetails>
+        </ContentBox>
+      ));
   }
 
   return (
