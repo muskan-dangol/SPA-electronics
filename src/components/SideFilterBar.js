@@ -1,24 +1,19 @@
 import * as React from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { addCategoryFilter } from "../store/action";
+import { useRecoilState } from "recoil";
+import { selectedCategoryState } from "../store/atom";
 import { Grid, Divider, Select, InputLabel, MenuItem } from "@mui/material";
 import { OuterBox, FormContent, Boxes, Filter } from "./SideFilterBarCss";
 import PriceRangeFilter from "./PriceRangeFilter";
 import RatingFilter from "./RateRangeSlider";
 
 export default function SideFilterBar({ data }) {
-  const dispatch = useDispatch();
-  const { selectedCategory } = useSelector((state) => state.selectedCategory);
+  const [selectedCategory, setSelectedCategory]  = useRecoilState(selectedCategoryState)
   const availableCategories = [
     ...new Set(data.map((product) => product.category)),
   ];
 
   const handleChangeFiltering = (e) => {
-    dispatch(addCategoryFilter(e.target.value));
-    const newUrl = `/products${
-      e.target.value ? `?category=${e.target.value}` : ""
-    }`;
-    window.history.replaceState({}, "", newUrl);
+    setSelectedCategory(e.target.value);
   };
 
   return (

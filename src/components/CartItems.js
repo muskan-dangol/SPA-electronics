@@ -1,11 +1,11 @@
 import React from "react";
 import { useState, useEffect } from "react";
-import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import { useRecoilState } from "recoil";
+import { discountFilterState } from "../store/atom";
 import CloseIcon from "@mui/icons-material/Close";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import RemoveCircleOutlineIcon from "@mui/icons-material/RemoveCircleOutline";
-import { filterByDiscount } from "../store/action";
 import {
   Avatar,
   Button,
@@ -17,7 +17,8 @@ import {
 } from "@mui/material";
 
 const CartItems = ({ onClose, onTotalQuantityChange }) => {
-  const dispatch = useDispatch();
+  const [filterByDiscount, setFilterByDiscount] =
+    useRecoilState(discountFilterState);
   const navigate = useNavigate();
   const [cartItems, setCartItems] = useState([]);
   const cartId = localStorage.getItem("cartId") || null;
@@ -57,7 +58,7 @@ const CartItems = ({ onClose, onTotalQuantityChange }) => {
   };
 
   const handleClickDiscountedProducts = () => {
-    dispatch(filterByDiscount(true));
+    setFilterByDiscount(true);
     onClose(true);
     navigate("/");
   };
@@ -125,6 +126,7 @@ const CartItems = ({ onClose, onTotalQuantityChange }) => {
                 <Button
                   variant="contained"
                   onClick={handleClickDiscountedProducts}
+                  data-filter={filterByDiscount}
                 >
                   Discounted Products
                 </Button>

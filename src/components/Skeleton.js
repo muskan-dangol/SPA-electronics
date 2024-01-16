@@ -10,7 +10,7 @@ const LoadingSkeleton = ({ count }) => (
         <Skeleton
           variant="rectangular"
           width="100%"
-          height={218}
+          height={150}
           sx={imageStyles}
         />
         <Box sx={detailsContainerStyles}>

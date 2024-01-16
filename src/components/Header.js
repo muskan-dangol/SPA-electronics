@@ -3,16 +3,20 @@ import styled from "styled-components";
 import ProductSearch from "./ProductSearch";
 import CartBadge from "./CartBadge";
 import { Button } from "@mui/material";
-import { useDispatch } from "react-redux";
-
-import { filterByDiscount } from "../store/action";
+import { discountFilterState } from "../store/atom";
+import { useRecoilState } from "recoil";
 
 function Header() {
   const navigate = useNavigate();
-  const dispatch = useDispatch();
+  const [filterByDiscount, setFilterByDiscount] =
+    useRecoilState(discountFilterState);
 
   const handleAllProducts = () => {
-    dispatch(filterByDiscount(false));
+    setFilterByDiscount(false);
+    navigate("/");
+  };
+  const handleDiscountedProducts = () => {
+    setFilterByDiscount(true);
     navigate("/");
   };
   const handleAddProducts = () => {
@@ -22,7 +26,24 @@ function Header() {
   return (
     <Container>
       <Phono onClick={() => navigate("/")}>PHONO</Phono>
-      <Button onClick={handleAllProducts}>All Products</Button>
+      {filterByDiscount === true ? (
+        <Button
+          variant="outlined"
+          onClick={handleAllProducts}
+          data-filter={filterByDiscount}
+        >
+          All Products
+        </Button>
+      ) : (
+        <Button
+          variant="outlined"
+          onClick={handleDiscountedProducts}
+          data-filter={filterByDiscount}
+        >
+          Weekly Discount
+        </Button>
+      )}
+
       <ProductSearch sx={{ flexGrow: 1 }} />
       <Button
         sx={{

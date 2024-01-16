@@ -1,16 +1,14 @@
-import { useDispatch, useSelector } from "react-redux";
-import { addRatingFilter } from "../store/action";
+import { useRecoilState } from "recoil";
+import { ratingFilterState } from "../store/atom";
 import { GrStar } from "react-icons/gr";
 import { Typography, Box } from "@mui/material";
 import styled from "styled-components";
 
 const RatingFilter = () => {
-  const dispatch = useDispatch();
-  const { ratingRange } = useSelector((state) => state);
-  const currentRating = Number(ratingRange);
+  const [ratingRange, setRatingRange] = useRecoilState(ratingFilterState);
 
   const handleRatingChange = (givenRating) => {
-    dispatch(addRatingFilter(givenRating));
+    setRatingRange(givenRating);
   };
 
   return (
@@ -29,7 +27,7 @@ const RatingFilter = () => {
               <Rating>
                 <ResponsiveStar
                   color={
-                    givenRating < currentRating || givenRating === currentRating
+                    givenRating < ratingRange || givenRating === ratingRange
                       ? "000"
                       : "rgb(192,192,192)"
                   }

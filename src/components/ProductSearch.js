@@ -1,15 +1,14 @@
-import { useDispatch, useSelector } from "react-redux";
-import { addProductSearch } from "../store/action";
+import { useRecoilState } from "recoil";
+import { searchTermState } from "../store/atom";
 import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
 import styled from "styled-components";
 
 export default function ProductSearch() {
-  const dispatch = useDispatch();
-  const { searchTerm } = useSelector((state) => state);
+  const [searchTerm, setSearchTerm] = useRecoilState(searchTermState); // const { searchTerm } = useSelector((state) => state);
 
   const handleSearchTerm = (e) => {
-    dispatch(addProductSearch(e.target.value));
+    setSearchTerm(e.target.value);
   };
   return (
     <SearchContent sx={{ flexGrow: 1 }}>

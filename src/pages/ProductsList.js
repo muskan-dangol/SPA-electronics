@@ -1,7 +1,17 @@
 import { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
+import { useRecoilValue } from "recoil";
+// selectors
+import {
+  selectedCategoryState,
+  discountFilterState,
+  priceRangeState,
+  searchTermState,
+  ratingFilterState,
+} from "../store/atom";
+
 import { fetchProduct, editProduct } from "../store/action";
 import RatingStar from "../components/StarRating";
 import LoadingSkeleton from "../components/Skeleton";
@@ -19,18 +29,21 @@ import {
 const ProductsList = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const productData = useQuery({
+    queryKey: ["products"],
+    queryFn: async () => {
+      const response = await fetch("http://localhost:3005");
+      return response.json();
+    },
+  });
 
-  const {
-    data,
-    isLoading,
-    error,
-    priceRange,
-    selectedCategory,
-    ratingRange,
-    isDiscountFilterEnabled,
-    searchTerm,
-  } = useSelector((state) => state) || {};
-  const productList = data || [];
+  const searchTerm = useRecoilValue(searchTermState);
+  const ratingRange = useRecoilValue(ratingFilterState);
+  const priceRange = useRecoilValue(priceRangeState);
+  const selectedCategory = useRecoilValue(selectedCategoryState);
+  const isDiscountFilterEnabled = useRecoilValue(discountFilterState);
+
+  const productList = productData.data || [];
   const [sortOrder, setSortOrder] = useState("asc");
   const [sortBy, setSortBy] = useState("");
 
@@ -47,10 +60,12 @@ const ProductsList = () => {
     setSortOrder(newSortOrder);
   };
 
-  const handleRatingChange = (e, _id, newRating) => {
+  const handleRatingChange = async (e, _id, newRating) => {
     e.stopPropagation();
-    dispatch(editProduct(_id, { rating: newRating }));
+    await dispatch(editProduct(_id, { rating: newRating }));
+    await productData.refetch();
   };
+
   const sortedData = productList.sort((a, b) => {
     const order = sortOrder === "asc" ? 1 : -1;
     if (sortBy === "title") {
@@ -89,13 +104,13 @@ const ProductsList = () => {
 
   let renderedProducts;
 
-  if (isLoading && productList.length === 0) {
+  if (productList.isLoading && productList.length === 0) {
     return (renderedProducts = (
       <Box sx={{ overflow: "hidden" }}>
         <LoadingSkeleton count={10} />
       </Box>
     ));
-  } else if (error) {
+  } else if (productList.isError) {
     renderedProducts = <div>Error fetching data...</div>;
   } else {
     renderedProducts =

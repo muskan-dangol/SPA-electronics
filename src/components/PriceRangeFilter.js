@@ -1,15 +1,14 @@
-import { useDispatch, useSelector } from "react-redux";
-import { addPriceFilter } from "../store/action";
+import { useRecoilState } from "recoil";
+import { priceRangeState } from "../store/atom";
 import { Box, Typography } from "@mui/material";
 import Slider from "@mui/material/Slider";
 import styled from "styled-components";
 
 export default function PriceRangeSlider() {
-  const dispatch = useDispatch();
-  const { priceRange } = useSelector((state) => state);
+  const [priceRange, setPriceRange] = useRecoilState(priceRangeState);
 
   const handlePriceChange = (e) => {
-    dispatch(addPriceFilter(e.target.value));
+    setPriceRange(e.target.value);
   };
   return (
     <BoxComponent>

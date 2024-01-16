@@ -3,10 +3,11 @@ import ProductsList from "./pages/ProductsList";
 import ProductDetails from "./pages/ProductDetailPage";
 import ProductForm from "./pages/ProductForm";
 import { Routes, Route } from "react-router-dom";
+import { RecoilRoot } from "recoil";
 
 function App() {
   return (
-    <div>
+    <RecoilRoot>
       <Header />
         <Routes>
           <Route path="/" element={<ProductsList />}></Route>
@@ -19,7 +20,7 @@ function App() {
             element={<ProductForm />}
           />
         </Routes>
-    </div>
+    </RecoilRoot>
   );
 }
 

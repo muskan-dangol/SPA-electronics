@@ -12,12 +12,6 @@ export const EDIT_PRODUCT_REQUEST = "EDIT_PRODUCT_REQUEST";
 export const EDIT_PRODUCT_SUCCESS = "EDIT_PRODUCT_SUCCESS";
 export const EDIT_PRODUCT_FAILURE = "EDIT_PRODUCT_FAILURE";
 
-export const ADD_CATEGORY_FILTER = "ADD_CATEGORY_FILTER";
-export const ADD_PRICE_FILTER = "ADD_PRICE_FILTER";
-export const ADD_RATING_FILTER = "ADD_RATING_FILTER";
-export const ADD_PRODUCT_SEARCH = "ADD_PRODUCT_SEARCH";
-export const ADD_DISCOUNT_PRODUCT = "ADD_DISCOUNT_PRODUCT";
-
 export const ADD_PRODUCTS_REQUEST = "ADD_PRODUCTS_REQUEST";
 export const ADD_PRODUCTS_SUCCESS = "ADD_PRODUCTS_SUCCESS";
 export const ADD_PRODUCTS_ERROR = "ADD_PRODUCTS_ERROR";
@@ -101,41 +95,6 @@ const addProductFailure = (error) => {
   };
 };
 
-export const addCategoryFilter = (selectedCategory) => {
-  return {
-    type: ADD_CATEGORY_FILTER,
-    payload: selectedCategory,
-  };
-};
-
-export const addPriceFilter = (priceRange) => {
-  return {
-    type: ADD_PRICE_FILTER,
-    payload: priceRange,
-  };
-};
-
-export const addRatingFilter = (ratingRange) => {
-  return {
-    type: ADD_RATING_FILTER,
-    payload: ratingRange,
-  };
-};
-
-export const addProductSearch = (searchTerm) => {
-  return {
-    type: ADD_PRODUCT_SEARCH,
-    payload: searchTerm,
-  };
-};
-
-export const filterByDiscount = (isEnabled) => {
-  return {
-    type: ADD_DISCOUNT_PRODUCT,
-    payload: isEnabled,
-  };
-};
-
 export const addProductToCart = (cartItem) => {
   return {
     type: ADD_PRODUCT_TO_CART,
@@ -171,9 +130,9 @@ export const fetchProductById = (productId) => {
 };
 
 export const editProduct = (_id, updatedData) => {
-  return (dispatch) => {
+  return async (dispatch) => {
     dispatch(editProductRequest());
-    axios
+    await axios
       .put(`http://localhost:3005/product/${_id}`, updatedData)
       .then(() => {
         dispatch(editProductSuccess);
