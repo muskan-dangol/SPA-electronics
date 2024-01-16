@@ -88,7 +88,7 @@ const addProductSuccess = (newProduct) => {
     payload: newProduct,
   };
 };
-const addProductFailure = (error) => {
+export const addProductFailure = (error) => {
   return {
     type: ADD_PRODUCTS_ERROR,
     payload: error,
@@ -137,7 +137,7 @@ export const editProduct = (_id, updatedData) => {
       .then(() => {
         dispatch(editProductSuccess);
         dispatch(fetchProduct());
-        dispatch(fetchProductById(_id))
+        dispatch(fetchProductById(_id));
       })
       .catch((error) => {
         dispatch(editProductFailure(error.message));
@@ -161,14 +161,18 @@ export const addCart = (id, product) => async (dispatch) => {
 };
 
 export const createProducts = (newProduct) => {
-  return async () => {
+  return async (dispatch) => {
     try {
-      addProductsRequest();
+      dispatch(addProductsRequest());
       await axios.post("http://localhost:3005/", newProduct);
-      addProductSuccess();
+      dispatch(addProductSuccess());
       fetchProduct();
     } catch (error) {
-      addProductFailure(error.message);
+      dispatch(
+        addProductFailure({
+          payload: "The product is already available in the store!!",
+        })
+      );
     }
   };
 };

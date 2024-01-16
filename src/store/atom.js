@@ -1,9 +1,9 @@
 import { atom } from "recoil";
 
 export const selectedCategoryState = atom({
-  key: 'selectedCategoryState', 
-  default: ''
-})
+  key: "selectedCategoryState",
+  default: "",
+});
 
 export const discountFilterState = atom({
   key: "discountFilterState",
@@ -23,4 +23,19 @@ export const searchTermState = atom({
 export const ratingFilterState = atom({
   key: "RatingFilterStata",
   default: 5,
+});
+
+export const formDataState = atom({
+  key: "formDataState",
+  default: {
+    title: "",
+    description: "",
+    price: 0,
+    stock: 0,
+    brand: "",
+    discountPercentage: 0,
+    category: "",
+    rating: 0,
+    img: "",
+  },
 });

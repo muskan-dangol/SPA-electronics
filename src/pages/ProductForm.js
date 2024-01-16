@@ -1,23 +1,26 @@
 import * as React from "react";
 import { useState } from "react";
-import { useDispatch } from "react-redux";
+import { useRecoilState } from "recoil";
+import { formDataState } from "../store/atom";
+import { useDispatch, useSelector } from "react-redux";
 import { createProducts } from "../store/action";
-import { FormControl, Typography, Button, Grid } from "@mui/material";
-import TextField from "@mui/material/TextField";
+import {
+  FormControl,
+  Typography,
+  Button,
+  Grid,
+  Snackbar,
+  IconButton,
+  Alert,
+  TextField,
+} from "@mui/material";
+import CloseIcon from "@mui/icons-material/Close";
 
 export default function ProductForm() {
   const dispatch = useDispatch();
-  const [formData, setFormData] = useState({
-    title: "",
-    description: "",
-    price: 0,
-    stock: 0,
-    brand: "",
-    discountPercentage: 0,
-    category: "",
-    rating: 0,
-    img: "",
-  });
+  const [open, setOpen] = useState(false);
+  const [formData, setFormData] = useRecoilState(formDataState);
+  const { error } = useSelector((state) => state);
 
   const handleChange = (event) => {
     const { name, value } = event.target;
@@ -28,24 +31,44 @@ export default function ProductForm() {
   };
 
   const handleSubmit = (event) => {
-    event.preventDefault();
-    dispatch(
-      createProducts(
-        formData
-      )
-    );
-    setFormData({
-      title: "",
-      description: "",
-      price: 0,
-      stock: 0,
-      brand: "",
-      discountPercentage: 0,
-      category: "",
-      rating: 0,
-      img: "",
-    })
+    try {
+      event.preventDefault();
+      dispatch(createProducts(formData));
+      setFormData({
+        title: "",
+        description: "",
+        price: 0,
+        stock: 0,
+        brand: "",
+        discountPercentage: 0,
+        category: "",
+        rating: 0,
+        img: "",
+      });
+      setOpen(true);
+    } catch (error) {
+      return error;
+    }
   };
+  const handleClose = (reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+    setOpen(false);
+  };
+
+  const action = (
+    <React.Fragment>
+      <IconButton
+        size="small"
+        aria-label="close"
+        color="inherit"
+        onClick={handleClose}
+      >
+        <CloseIcon fontSize="small" />
+      </IconButton>
+    </React.Fragment>
+  );
 
   return (
     <form onSubmit={handleSubmit}>
@@ -121,7 +144,6 @@ export default function ProductForm() {
               name="stock"
               onChange={handleChange}
             />
-            
             <TextField
               type="discountPercentage"
               variant="standard"
@@ -155,6 +177,30 @@ export default function ProductForm() {
             >
               Submit
             </Button>
+            <Snackbar
+              open={open}
+              autoHideDuration={6000}
+              onClose={handleClose}
+              action={action}
+            >
+              {error !== null ? (
+                <Alert
+                  onClose={handleClose}
+                  severity="error"
+                  sx={{ width: "100%" }}
+                >
+                  {error.payload || "Failed to add product"}
+                </Alert>
+              ) : (
+                <Alert
+                  onClose={handleClose}
+                  severity="success"
+                  sx={{ width: "100%" }}
+                >
+                  New Product has been added successfully
+                </Alert>
+              )}
+            </Snackbar>
           </FormControl>
         </Grid>
       </Grid>
