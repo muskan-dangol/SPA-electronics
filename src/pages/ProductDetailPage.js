@@ -1,37 +1,69 @@
-import React, { useEffect } from "react";
-import { useSelector, useDispatch } from "react-redux";
+import React from "react";
+import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { useParams } from "react-router-dom";
-import { fetchProductById, editProduct } from "../store/action";
+import { useQuery } from "@tanstack/react-query";
+import { editProduct, deleteProduct } from "../store/action";
+
 import styled from "styled-components";
 import { v4 as uuidv4 } from "uuid";
 import RatingStar from "../components/StarRating";
-import { Grid, Button, Card, CardContent, Typography } from "@mui/material";
+import {
+  Grid,
+  Button,
+  Card,
+  Dialog,
+  DialogActions,
+  DialogTitle,
+  CardContent,
+  Typography,
+} from "@mui/material";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const ProductDetails = () => {
+  const [openDialogue, setOpenDialogue] = React.useState(false); //dialogue open/close state
   const { productId } = useParams();
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  useEffect(() => {
-    dispatch(fetchProductById(productId));
-  }, [dispatch, productId]);
+  const { data, refetch, error } = useQuery({
+    queryKey: ["productDetails"],
+    queryFn: async () => {
+      const response = await fetch(
+        `http://localhost:3005/products/${productId}`
+      );
+      return response.json();
+    },
+    enabled: true,
+    refetchOnWindowFocus: false,
+  });
+  const productDetail = data || {};
 
-  const product = useSelector((state) =>
-    state.productDetail
-  );
-  const isLoading = useSelector((state) => state.isLoading);
-
-  if (isLoading) {
-    return <div>Loading...</div>;
+  if (error) {
+    return <div>Error: {error.message}</div>;
   }
 
-  if (!product) {
+  if (!productDetail) {
     return <div>Product not found</div>;
   }
-  const handleRatingChange = (e, _id, newRating) => {
+  const handleRatingChange = async (e, _id, newRating) => {
     e.stopPropagation();
-    dispatch(editProduct(_id, { rating: newRating }));
+    await dispatch(editProduct(_id, { rating: newRating }));
+    await refetch();
+  };
+
+  const notifyDeletion = () => {
+    toast.success("Deleted product Successfully!!");
+  };
+  const notifyCartAddition = () => {
+    toast.success("Added product to Cart Successfully!!");
+  };
+
+  const handleDeleteProduct = (e, _id) => {
+    setOpenDialogue(false);
+    dispatch(deleteProduct(_id));
+    navigate("/");
   };
 
   const handleAddCart = () => {
@@ -39,18 +71,19 @@ const ProductDetails = () => {
     const data = localStorage.getItem(cartId);
     const existingCartItems = data ? JSON.parse(data) : [];
     const existingCartItemIndex = existingCartItems.findIndex(
-      (item) => item.id === product._id
+      (item) => item.id === productDetail._id
     );
     if (existingCartItemIndex !== -1) {
       existingCartItems[existingCartItemIndex].quantity += 1;
     } else {
       const cartItem = {
-        id: product._id,
-        title: product.title,
-        price: product.price,
+        id: productDetail._id,
+        title: productDetail.title,
+        price: productDetail.price,
         quantity: 1,
       };
       existingCartItems.push(cartItem);
+      
     }
     const totalQuantity = existingCartItems.reduce(
       (total, item) => total + item.quantity,
@@ -84,13 +117,13 @@ const ProductDetails = () => {
           <CardContainer>
             <CardContent>
               <Typography gutterBottom variant="h5" component="div">
-                {product.title}
+                {productDetail.title}
               </Typography>
               <Typography variant="body1" color="red">
-                ${product.price}
+                ${productDetail.price}
               </Typography>
               <Typography variant="h6" color="text.primary">
-                {product.description}
+                {productDetail.description}
               </Typography>
             </CardContent>
           </CardContainer>
@@ -100,10 +133,10 @@ const ProductDetails = () => {
             <Grid item sm={12} md={12}>
               <CardContent>
                 <Typography gutterBottom variant="h4" component="div">
-                  <strong>{product.title}</strong>
+                  <strong>{productDetail.title}</strong>
                 </Typography>
                 <Typography variant="h5" color="red">
-                  ${product.price}
+                  ${productDetail.price}
                 </Typography>
                 <Grid container spacing={1}>
                   <Grid item xs={6} md={6}>
@@ -113,7 +146,7 @@ const ProductDetails = () => {
                   </Grid>
                   <Grid item xs={6} md={6}>
                     <Typography variant="h6" color="text.primary">
-                      {product.category}
+                      {productDetail.category}
                     </Typography>
                   </Grid>
                   <Grid item xs={6} md={6}>
@@ -123,7 +156,7 @@ const ProductDetails = () => {
                   </Grid>
                   <Grid item xs={6} md={6}>
                     <Typography variant="h6" color="text.primary">
-                      {product.brand}
+                      {productDetail.brand}
                     </Typography>
                   </Grid>
 
@@ -134,7 +167,7 @@ const ProductDetails = () => {
                   </Grid>
                   <Grid item xs={6} md={6}>
                     <Typography variant="h6" color="text.primary">
-                      {product.description}
+                      {productDetail.description}
                     </Typography>
                   </Grid>
                   <Grid item xs={6} md={6}>
@@ -144,16 +177,60 @@ const ProductDetails = () => {
                   </Grid>
                   <Grid>
                     <RatingStar
-                      value={product.rating}
+                      value={productDetail.rating}
                       onChange={(e, newRating) =>
-                        handleRatingChange(e, product._id, newRating)
+                        handleRatingChange(e, productDetail._id, newRating)
                       }
                     />
                   </Grid>
                 </Grid>
-                <CartButton variant="contained" onClick={handleAddCart}>
-                  Add to cart
-                </CartButton>
+                <Grid container>
+                  <Grid item md={6} xs={5} sm={6} width={"100%"}>
+                    <CartButton variant="contained" onClick={() => {
+                      handleAddCart();
+                      notifyCartAddition();
+                    }}>
+                      Add to cart
+                    </CartButton>
+                  </Grid>
+                  <Grid item md={6} xs={5} sm={6} width={"100%"}>
+                    <CartButton
+                      variant="contained"
+                      color="error"
+                      onClick={() => setOpenDialogue(true)}
+                    >
+                      Delete Product
+                    </CartButton>
+                    <Dialog
+                      open={openDialogue}
+                      onClose={() => setOpenDialogue(false)}                  
+                    >
+                      <DialogTitle id="alert-dialog-title">
+                        {
+                          "Are you sure you want to delete this product? This action is irreversible and will permanently remove all associated data. Confirm with 'DELETE' or click 'CANCEL' to go back."
+                        }
+                      </DialogTitle>
+                      <DialogActions>
+                        <Button
+                          onClick={() => {
+                            setOpenDialogue(false);
+                          }}
+                        >
+                          Cancel
+                        </Button>
+                        <Button
+                          onClick={(e) => {
+                            handleDeleteProduct(e, productDetail._id);
+                            notifyDeletion();
+                          }}
+                          autoFocus
+                        >
+                          Delete
+                        </Button>
+                      </DialogActions>
+                    </Dialog>
+                  </Grid>
+                </Grid>
               </CardContent>
             </Grid>
           </GridContainer>
@@ -200,5 +277,5 @@ export const CartButton = styled(Button)`
   && {
     margin-top: 3%;
   }
-  width: 40%;
+  width: auto;
 `;

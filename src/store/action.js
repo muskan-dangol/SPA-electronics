@@ -1,13 +1,5 @@
 import axios from "axios";
 
-export const FETCH_PRODUCT_REQUEST = "FETCH_DATA_REQUEST";
-export const FETCH_PRODUCT_SUCCESS = "FETCH_DATA_SUCCESS";
-export const FETCH_PRODUCT_FAILURE = "FETCH_DATA_FAILURE";
-
-export const FETCH_PRODUCTBYID_REQUEST = "FETCH_DATABYID_REQUEST";
-export const FETCH_PRODUCTBYID_SUCCESS = "FETCH_DATABYID_SUCCESS";
-export const FETCH_PRODUCTBYID_FAILURE = "FETCH_DATABYID_FAILURE";
-
 export const EDIT_PRODUCT_REQUEST = "EDIT_PRODUCT_REQUEST";
 export const EDIT_PRODUCT_SUCCESS = "EDIT_PRODUCT_SUCCESS";
 export const EDIT_PRODUCT_FAILURE = "EDIT_PRODUCT_FAILURE";
@@ -16,46 +8,13 @@ export const ADD_PRODUCTS_REQUEST = "ADD_PRODUCTS_REQUEST";
 export const ADD_PRODUCTS_SUCCESS = "ADD_PRODUCTS_SUCCESS";
 export const ADD_PRODUCTS_ERROR = "ADD_PRODUCTS_ERROR";
 
+export const DELETE_PRODUCT_REQUEST = "DELETE_PRODUCT_REQUEST";
+export const DELETE_PRODUCT_SUCCESS = "DELETE_PRODUCT_SUCCESS";
+export const DELETE_PRODUCT_FAILURE = "DELETE_PRODUCT_FAILURE";
+
 // cart
 export const ADD_PRODUCT_TO_CART = "ADD_PRODUCT_TO_CART";
 
-const fetchProductRequest = () => {
-  return {
-    type: FETCH_PRODUCT_REQUEST,
-  };
-};
-
-const fetchProductSuccess = (data) => {
-  return {
-    type: FETCH_PRODUCT_SUCCESS,
-    payload: data,
-  };
-};
-const fetchProductFailure = (error) => {
-  return {
-    type: FETCH_PRODUCT_FAILURE,
-    payload: error,
-  };
-};
-
-const fetchProductByIdRequest = () => {
-  return {
-    type: FETCH_PRODUCTBYID_REQUEST,
-  };
-};
-
-const fetchProductByIdSuccess = (dataById) => {
-  return {
-    type: FETCH_PRODUCTBYID_SUCCESS,
-    payload: dataById,
-  };
-};
-const fetchProductByIdFailure = (error) => {
-  return {
-    type: FETCH_PRODUCTBYID_FAILURE,
-    payload: error,
-  };
-};
 
 const editProductRequest = () => {
   return {
@@ -95,6 +54,25 @@ export const addProductFailure = (error) => {
   };
 };
 
+const deleteProductRequest = () => {
+  return {
+    type: DELETE_PRODUCT_REQUEST,
+  };
+};
+
+const deleteProductSuccess = () => {
+  return {
+    type: DELETE_PRODUCT_SUCCESS,
+  };
+};
+
+const deleteProductFailure = (error) => {
+  return {
+    type: DELETE_PRODUCT_FAILURE,
+    payload: error,
+  };
+};
+
 export const addProductToCart = (cartItem) => {
   return {
     type: ADD_PRODUCT_TO_CART,
@@ -102,42 +80,13 @@ export const addProductToCart = (cartItem) => {
   };
 };
 
-export const fetchProduct = () => {
-  return (dispatch) => {
-    dispatch(fetchProductRequest());
-    axios
-      .get("http://localhost:3005")
-      .then((response) => {
-        const data = response.data;
-        dispatch(fetchProductSuccess(data));
-      })
-      .catch((error) => {
-        dispatch(fetchProductFailure(error.message));
-      });
-  };
-};
-export const fetchProductById = (productId) => {
-  return async (dispatch) => {
-    dispatch(fetchProductByIdRequest());
-    try {
-      const response = await axios.get(`http://localhost:3005/${productId}`);
-      const productDetail = response.data;
-      dispatch(fetchProductByIdSuccess(productDetail));
-    } catch (error) {
-      dispatch(fetchProductByIdFailure(error.message));
-    }
-  };
-};
-
 export const editProduct = (_id, updatedData) => {
   return async (dispatch) => {
     dispatch(editProductRequest());
     await axios
-      .put(`http://localhost:3005/product/${_id}`, updatedData)
+      .put(`http://localhost:3005/products/${_id}`, updatedData)
       .then(() => {
         dispatch(editProductSuccess);
-        dispatch(fetchProduct());
-        dispatch(fetchProductById(_id));
       })
       .catch((error) => {
         dispatch(editProductFailure(error.message));
@@ -160,13 +109,26 @@ export const addCart = (id, product) => async (dispatch) => {
   }
 };
 
+export const deleteProduct = (_id) => {
+  return async (dispatch) => {
+    dispatch(deleteProductRequest());
+    await axios
+      .delete(`http://localhost:3005/products/${_id}`)
+      .then(() => {
+        dispatch(deleteProductSuccess);
+      })
+      .catch((error) => {
+        dispatch(deleteProductFailure(error.message));
+      });
+  };
+};
+
 export const createProducts = (newProduct) => {
   return async (dispatch) => {
     try {
       dispatch(addProductsRequest());
-      await axios.post("http://localhost:3005/", newProduct);
+      await axios.post("http://localhost:3005/products", newProduct);
       dispatch(addProductSuccess());
-      fetchProduct();
     } catch (error) {
       dispatch(
         addProductFailure({

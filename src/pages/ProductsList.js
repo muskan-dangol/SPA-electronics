@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
@@ -11,8 +11,7 @@ import {
   searchTermState,
   ratingFilterState,
 } from "../store/atom";
-
-import { fetchProduct, editProduct } from "../store/action";
+import { editProduct } from "../store/action";
 import RatingStar from "../components/StarRating";
 import LoadingSkeleton from "../components/Skeleton";
 import SortBar from "../components/SortBar";
@@ -29,13 +28,16 @@ import {
 const ProductsList = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const productData = useQuery({
+  const {data, refetch} = useQuery({
     queryKey: ["products"],
     queryFn: async () => {
-      const response = await fetch("http://localhost:3005");
+      const response = await fetch("http://localhost:3005/products");
       return response.json();
     },
+    enabled: true,
+    refetchOnWindowFocus:false,
   });
+  const productList = data || [];
 
   const searchTerm = useRecoilValue(searchTermState);
   const ratingRange = useRecoilValue(ratingFilterState);
@@ -43,13 +45,9 @@ const ProductsList = () => {
   const selectedCategory = useRecoilValue(selectedCategoryState);
   const isDiscountFilterEnabled = useRecoilValue(discountFilterState);
 
-  const productList = productData.data || [];
   const [sortOrder, setSortOrder] = useState("asc");
   const [sortBy, setSortBy] = useState("");
 
-  useEffect(() => {
-    dispatch(fetchProduct(sortOrder, sortBy));
-  }, []);
 
   const handleClick = (product) => {
     navigate(`/productDetail/${product.title}/${product._id}`);
@@ -63,7 +61,7 @@ const ProductsList = () => {
   const handleRatingChange = async (e, _id, newRating) => {
     e.stopPropagation();
     await dispatch(editProduct(_id, { rating: newRating }));
-    await productData.refetch();
+    await refetch();
   };
 
   const sortedData = productList.sort((a, b) => {
