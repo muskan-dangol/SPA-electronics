@@ -5,6 +5,7 @@ import { styled } from "@mui/material/styles";
 import IconButton from "@mui/material/IconButton";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import CartItems from "./CartItems";
+import { useSelector } from "react-redux/es/hooks/useSelector";
 
 const StyledBadge = styled(Badge)(({ theme }) => ({
   "& .MuiBadge-badge": {
@@ -14,6 +15,7 @@ const StyledBadge = styled(Badge)(({ theme }) => ({
   },
 }));
 const CartBadge = () => {
+  const isAuthenticated = useSelector((state) => state.authenticated);
   const totalCartItems = localStorage.getItem("totalQuantity") || 0;
   const [isDrawerOpen, setDrawerOpen] = useState(false);
   const [totalQuantity, setTotalQuantity] = useState(totalCartItems);
@@ -46,7 +48,7 @@ const CartBadge = () => {
         }}
         onClick={handleOpen}
       >
-        {totalQuantity > 0 ? (
+        {totalQuantity > 0 && isAuthenticated ? (
           <StyledBadge badgeContent={totalQuantity} color="primary">
             <ShoppingCartIcon />
           </StyledBadge>

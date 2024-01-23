@@ -92,7 +92,7 @@ export default function ProductForm() {
               width: "50%",
               border: "1px solid gray",
               p: 5,
-              borderRadius: 5,
+              borderRadius: 2,
             }}
           >
             <Typography variant="h5">Add Products</Typography>
@@ -189,7 +189,7 @@ export default function ProductForm() {
                   severity="error"
                   sx={{ width: "100%" }}
                 >
-                  {error.payload || "Failed to add product"}
+                  {"Failed to add product"}
                 </Alert>
               ) : (
                 <Alert

@@ -15,6 +15,21 @@ export const DELETE_PRODUCT_FAILURE = "DELETE_PRODUCT_FAILURE";
 // cart
 export const ADD_PRODUCT_TO_CART = "ADD_PRODUCT_TO_CART";
 
+// user authentication
+export const AUTH_REQUEST = "auth_request";
+export const AUTH_USERS = "auth_users";
+export const AUTH_ERROR = "auth_error";
+
+const authRequest = () => {
+  return {
+    type: AUTH_REQUEST,
+  };
+};
+const authError = () => {
+  return {
+    type: AUTH_ERROR,
+  };
+};
 
 const editProductRequest = () => {
   return {
@@ -77,6 +92,38 @@ export const addProductToCart = (cartItem) => {
   return {
     type: ADD_PRODUCT_TO_CART,
     payload: cartItem,
+  };
+};
+
+export const signup = (e, callback) => async (dispatch) => {
+  try {
+    dispatch(authRequest());
+    const response = await axios.post("http://localhost:3005/signup", e);
+    dispatch({ type: AUTH_USERS, payload: response.data.token });
+    localStorage.setItem("Token", response.data.token);
+    callback();
+  } catch (error) {
+    dispatch(authError("Email in use already"));
+  }
+};
+
+export const signin = (e, callback) => async (dispatch) => {
+  try {
+    dispatch(authRequest());
+    const response = await axios.post("http://localhost:3005/signin", e);
+    dispatch({ type: AUTH_USERS, payload: response.data.token });
+    localStorage.setItem("Token", response.data.token);
+    callback();
+  } catch (error) {
+    dispatch(authError("invalid login credentialas"));
+  }
+};
+
+export const signout = () => {
+  localStorage.removeItem("Token");
+  return {
+    type: AUTH_USERS,
+    payload: "",
   };
 };
 

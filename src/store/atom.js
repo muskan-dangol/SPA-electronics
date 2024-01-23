@@ -1,5 +1,15 @@
 import { atom } from "recoil";
 
+export const userSignupState = atom({
+  key: "userSignupState",
+  default: { email: "", password: "", username: "" },
+});
+
+export const userSigninState = atom({
+  key: "userSigninState",
+  default: { email: "", password: "", username: "" },
+});
+
 export const selectedCategoryState = atom({
   key: "selectedCategoryState",
   default: "",

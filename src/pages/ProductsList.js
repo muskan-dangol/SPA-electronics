@@ -28,14 +28,14 @@ import {
 const ProductsList = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const {data, refetch} = useQuery({
+  const { data, refetch } = useQuery({
     queryKey: ["products"],
     queryFn: async () => {
       const response = await fetch("http://localhost:3005/products");
       return response.json();
     },
     enabled: true,
-    refetchOnWindowFocus:false,
+    refetchOnWindowFocus: false,
   });
   const productList = data || [];
 
@@ -48,9 +48,8 @@ const ProductsList = () => {
   const [sortOrder, setSortOrder] = useState("asc");
   const [sortBy, setSortBy] = useState("");
 
-
   const handleClick = (product) => {
-    navigate(`/productDetail/${product.title}/${product._id}`);
+    navigate(`/${product.title}/${product._id}`);
   };
 
   const handleSortChange = (newSortOrder, newSortBy) => {

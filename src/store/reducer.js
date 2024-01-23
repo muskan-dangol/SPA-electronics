@@ -1,5 +1,4 @@
 import {
-  
   EDIT_PRODUCT_REQUEST,
   EDIT_PRODUCT_SUCCESS,
   EDIT_PRODUCT_FAILURE,
@@ -7,12 +6,15 @@ import {
   ADD_PRODUCTS_SUCCESS,
   ADD_PRODUCTS_REQUEST,
   ADD_PRODUCTS_ERROR,
-  
+
   DELETE_PRODUCT_REQUEST,
   DELETE_PRODUCT_SUCCESS,
   DELETE_PRODUCT_FAILURE,
-
   
+  AUTH_REQUEST,
+  AUTH_USERS,
+  AUTH_ERROR,
+
   // cart
   ADD_PRODUCT_TO_CART,
 } from "./action";
@@ -23,10 +25,29 @@ const initialState = {
   error: null,
   cartItem: "",
   newProduct: "",
+  authenticated: false,
 };
 
 const reducer = (state = initialState, action) => {
   switch (action.type) {
+    case AUTH_REQUEST:
+      return {
+        ...state,
+        isLoading: true,
+        error: null,
+      };
+    case AUTH_USERS:
+      return {
+        ...state,
+        isLoading: false,
+        authenticated: action.payload,
+      };
+    case AUTH_ERROR:
+      return {
+        ...state,
+        isLoading: false,
+        error: action.payload,
+      };
     case EDIT_PRODUCT_REQUEST:
       return {
         ...state,
@@ -62,9 +83,9 @@ const reducer = (state = initialState, action) => {
         ...state,
         isLoading: false,
         error: action.payload,
-      }; 
-      
-      case DELETE_PRODUCT_REQUEST:
+      };
+
+    case DELETE_PRODUCT_REQUEST:
       return {
         ...state,
         isLoading: true,

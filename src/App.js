@@ -3,8 +3,10 @@ import ProductsList from "./pages/ProductsList";
 import ProductDetails from "./pages/ProductDetailPage";
 import ProductForm from "./pages/ProductForm";
 import { Routes, Route } from "react-router-dom";
-import { ToastContainer } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import SignupForm from "./components/auth/Signup";
+import SignInForm from "./components/auth/Signin";
 
 function App() {
   return (
@@ -12,13 +14,17 @@ function App() {
       <Header />
       <Routes>
         <Route path="/" element={<ProductsList />}></Route>
-        <Route
-          path="/productDetail/:productTitle/:productId"
-          element={<ProductDetails />}
-        />
+        <Route path="/:productTitle/:productId" element={<ProductDetails />} />
         <Route path="/productForm" element={<ProductForm />} />
+        <Route path="/signup" element={<SignupForm />} />
+        <Route path="/signin" element={<SignInForm />} />
       </Routes>
-      <ToastContainer autoClose= {3000} pauseOnFocusLoss={false} hideProgressBar={true} position="bottom-right"/>
+      <ToastContainer
+        autoClose={3000}
+        pauseOnFocusLoss={false}
+        hideProgressBar={true}
+        position="bottom-right"
+      />
     </>
   );
 }

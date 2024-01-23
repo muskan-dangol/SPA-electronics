@@ -5,9 +5,15 @@ import CartBadge from "./CartBadge";
 import { Button } from "@mui/material";
 import { discountFilterState } from "../store/atom";
 import { useRecoilState } from "recoil";
+import { useSelector } from "react-redux/es/hooks/useSelector";
+import { useDispatch } from "react-redux";
+import { signout } from "../store/action";
 
 function Header() {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const isAuthenticated = useSelector((state) => state.authenticated);
+
   const [filterByDiscount, setFilterByDiscount] =
     useRecoilState(discountFilterState);
 
@@ -22,13 +28,16 @@ function Header() {
   const handleAddProducts = () => {
     navigate("/productForm");
   };
+  const handleSignout = () => {
+    dispatch(signout());
+    navigate("/signin");
+  };
 
   return (
     <Container>
       <Phono onClick={() => navigate("/")}>PHONO</Phono>
       {filterByDiscount === true ? (
         <Button
-          variant="outlined"
           onClick={handleAllProducts}
           data-filter={filterByDiscount}
         >
@@ -36,7 +45,6 @@ function Header() {
         </Button>
       ) : (
         <Button
-          variant="outlined"
           onClick={handleDiscountedProducts}
           data-filter={filterByDiscount}
         >
@@ -45,15 +53,35 @@ function Header() {
       )}
 
       <ProductSearch sx={{ flexGrow: 1 }} />
-      <Button
-        sx={{
-          ml: "auto",
-        }}
-        variant="outlined"
-        onClick={handleAddProducts}
-      >
-        Add Products
-      </Button>
+      {isAuthenticated ? (
+        <>
+          <Button
+            sx={{
+              ml: "auto",
+            }}
+            onClick={handleAddProducts}
+          >
+            Add Products
+          </Button>
+          <Button
+            sx={{
+              ml: 1,
+            }}
+            onClick={handleSignout}
+          >
+            sign out
+          </Button>
+        </>
+      ) : (
+        <Button
+          sx={{
+            ml: "auto",
+          }}
+          onClick={() => navigate("/signin")}
+        >
+          Signin
+        </Button>
+      )}
       <CartBadge />
     </Container>
   );
